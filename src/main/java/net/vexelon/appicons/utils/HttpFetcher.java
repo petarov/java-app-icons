@@ -7,8 +7,13 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
+import java.util.logging.Level;
+import java.util.logging.LogManager;
+import java.util.logging.Logger;
 
 public final class HttpFetcher {
+
+    private static final Logger logger = Logger.getLogger(HttpFetcher.class.getName());
 
     private long timeout = 30L;
 
@@ -24,7 +29,7 @@ public final class HttpFetcher {
         return response;
     }
 
-    private static HttpClient newClient() {
+    private HttpClient newClient() {
         return HttpClient.newBuilder()
                 .version(HttpClient.Version.HTTP_2)
                 .followRedirects(HttpClient.Redirect.NORMAL)
@@ -33,29 +38,28 @@ public final class HttpFetcher {
                 .build();
     }
 
-    public InputStream getBlocking(String url) {
-        var request = HttpRequest.newBuilder()
+    private HttpRequest newRequest(String url) {
+        return HttpRequest.newBuilder()
                 .uri(URI.create(url))
                 .timeout(Duration.ofSeconds(timeout))
                 .build();
+    }
 
+    public InputStream getBlocking(String url) {
+        logger.log(Level.FINE, "GET BIO: {0}", url);
         try {
             return verifyOk(
-                    newClient().send(request, HttpResponse.BodyHandlers.ofInputStream())).body();
+                    newClient().send(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())).body();
         } catch (Throwable t) {
             throw new RuntimeException("Error downloading " + url, t);
         }
     }
 
     public void getNonBlocking(String url, CompletableFuture<InputStream> callback) {
-        var request = HttpRequest.newBuilder()
-                .uri(URI.create(url))
-                .timeout(Duration.ofSeconds(timeout))
-                .build();
-
+        logger.log(Level.FINE, "GET NIO: {0}", url);
         try {
-            newClient().sendAsync(request, HttpResponse.BodyHandlers.ofInputStream()).thenAccept(response ->
-                    callback.complete(response.body()));
+            newClient().sendAsync(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())
+                    .thenAccept(response -> callback.complete(response.body()));
         } catch (Throwable t) {
             throw new RuntimeException("Error downloading " + url, t);
         }

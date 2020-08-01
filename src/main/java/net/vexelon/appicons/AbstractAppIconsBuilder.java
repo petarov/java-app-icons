@@ -5,7 +5,9 @@ import net.vexelon.appicons.wireframe.Downloader;
 
 public abstract class AbstractAppIconsBuilder<T extends Downloader> {
 
-    private long timeout;
+    // TODO proxy
+
+    private long timeout = -1;
     private String country;
     private String language;
 
@@ -26,7 +28,9 @@ public abstract class AbstractAppIconsBuilder<T extends Downloader> {
 
     protected HttpFetcher newHttpFetcher() {
         var httpFetcher = new HttpFetcher();
-        httpFetcher.setTimeout(timeout);
+        if (timeout != -1) {
+            httpFetcher.setTimeout(timeout);
+        }
         return httpFetcher;
     }
 
