@@ -1,7 +1,6 @@
 package net.vexelon.appicons.playstore;
 
 import net.vexelon.appicons.AbstractAppIconsBuilder;
-import net.vexelon.appicons.appstore.AppStoreDownloader;
 import net.vexelon.appicons.wireframe.Downloader;
 
 import java.util.ArrayList;
@@ -9,7 +8,7 @@ import java.util.List;
 
 public class PlayStoreIconsBuilder extends AbstractAppIconsBuilder<PlayStoreIconsBuilder> {
 
-    class PlayStoreConfig {
+    class PlayStoreConfig extends BuilderConfig {
 
         private List<Integer> sizes = new ArrayList<>();
 
@@ -21,8 +20,13 @@ public class PlayStoreIconsBuilder extends AbstractAppIconsBuilder<PlayStoreIcon
     private PlayStoreConfig config = new PlayStoreConfig();
 
     @Override
+    public BuilderConfig config() {
+        return config;
+    }
+
+    @Override
     public Downloader build() {
-        return new PlayStoreDownloader(newHttpFetcher(), config);
+        return new PlayStoreDownloader(config);
     }
 
     public PlayStoreIconsBuilder sizes(int... sizes) {

@@ -8,7 +8,7 @@ import java.util.List;
 
 public class AppStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreIconsBuilder> {
 
-    class AppStoreConfig {
+    class AppStoreConfig extends BuilderConfig {
 
         private List<Integer> sizes = new ArrayList<>(List.of(60, 100, 512));
 
@@ -20,8 +20,13 @@ public class AppStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreIconsB
     private AppStoreIconsBuilder.AppStoreConfig config = new AppStoreIconsBuilder.AppStoreConfig();
 
     @Override
+    public BuilderConfig config() {
+        return config;
+    }
+
+    @Override
     public Downloader build() {
-        return new AppStoreDownloader(newHttpFetcher(), config);
+        return new AppStoreDownloader(config);
     }
 
     public AppStoreIconsBuilder size60(boolean enabled) {

@@ -1,6 +1,6 @@
 package net.vexelon.appicons.utils;
 
-public final class UrlUtils {
+public final class AppURLUtils {
 
     public static String appstore(String id, String country, String language) {
         var sb = new StringBuilder();

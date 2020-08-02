@@ -1,7 +1,7 @@
 package net.vexelon.appicons.wireframe;
 
 import net.vexelon.appicons.entities.FileIcon;
-import net.vexelon.appicons.entities.UrlIcon;
+import net.vexelon.appicons.entities.URLIcon;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -14,7 +14,7 @@ public interface Downloader {
     /**
      * Fetches icon urls for a single {@code appId} in a blocking way.
      */
-    List<UrlIcon> getUrls(String appId);
+    List<URLIcon> getUrls(String appId);
 
     /**
      * Fetches icon files for a single {@code appId} in a blocking way.
@@ -24,7 +24,7 @@ public interface Downloader {
     /**
      * Fetches icon urls for multiple app identifiers {@code appIds} in a blocking way.
      */
-    Map<String, List<UrlIcon>> getMultiUrls(Set<String> appIds);
+    Map<String, List<URLIcon>> getMultiUrls(Set<String> appIds);
 
     /**
      * Fetches icon files for multiple app identifiers {@code appIds} in a blocking way.
@@ -36,7 +36,7 @@ public interface Downloader {
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getUrls(String appId, CompletableFuture<DownloadCallback<List<UrlIcon>>> callback);
+    void getUrls(String appId, CompletableFuture<DownloadCallback<List<URLIcon>>> callback);
 
     /**
      * Fetches icon files for a single {@code appId} in an asynchronous way.
@@ -50,7 +50,7 @@ public interface Downloader {
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getMultiUrls(String appId, CompletableFuture<DownloadCallback<Map<String, List<UrlIcon>>>> callback);
+    void getMultiUrls(String appId, CompletableFuture<DownloadCallback<Map<String, List<URLIcon>>>> callback);
 
     /**
      * Fetches icon files for multiple app identifiers {@code appIds} in an asynchronous way.

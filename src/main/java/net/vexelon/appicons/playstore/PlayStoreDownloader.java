@@ -1,9 +1,9 @@
 package net.vexelon.appicons.playstore;
 
 import net.vexelon.appicons.entities.FileIcon;
-import net.vexelon.appicons.entities.UrlIcon;
+import net.vexelon.appicons.entities.URLIcon;
 import net.vexelon.appicons.utils.HttpFetcher;
-import net.vexelon.appicons.utils.UrlUtils;
+import net.vexelon.appicons.utils.AppURLUtils;
 import net.vexelon.appicons.wireframe.DownloadCallback;
 import net.vexelon.appicons.wireframe.Downloader;
 
@@ -15,18 +15,18 @@ import java.util.concurrent.CompletableFuture;
 
 public class PlayStoreDownloader implements Downloader {
 
-    private HttpFetcher fetcher;
-    private PlayStoreIconsBuilder.PlayStoreConfig config;
+    private final PlayStoreIconsBuilder.PlayStoreConfig config;
+    private final HttpFetcher fetcher;
 
-    public PlayStoreDownloader(HttpFetcher fetcher, PlayStoreIconsBuilder.PlayStoreConfig config) {
-        this.fetcher = fetcher;
+    public PlayStoreDownloader(PlayStoreIconsBuilder.PlayStoreConfig config) {
         this.config = config;
+        this.fetcher = new HttpFetcher(config);
     }
 
     @Override
-    public List<UrlIcon> getUrls(String appId) {
+    public List<URLIcon> getUrls(String appId) {
         return new PlayStoreIconsParser(config).parse(
-                fetcher.getBlocking(UrlUtils.playstore(appId, "", "")));
+                fetcher.getBlocking(AppURLUtils.playstore(appId, "", "")));
     }
 
     @Override
@@ -35,7 +35,7 @@ public class PlayStoreDownloader implements Downloader {
     }
 
     @Override
-    public Map<String, List<UrlIcon>> getMultiUrls(Set<String> appIds) {
+    public Map<String, List<URLIcon>> getMultiUrls(Set<String> appIds) {
         return null;
     }
 
@@ -45,7 +45,7 @@ public class PlayStoreDownloader implements Downloader {
     }
 
     @Override
-    public void getUrls(String appId, CompletableFuture<DownloadCallback<List<UrlIcon>>> callback) {
+    public void getUrls(String appId, CompletableFuture<DownloadCallback<List<URLIcon>>> callback) {
 
     }
 
@@ -57,7 +57,7 @@ public class PlayStoreDownloader implements Downloader {
 
     @Override
     public void getMultiUrls(String appId,
-                             CompletableFuture<DownloadCallback<Map<String, List<UrlIcon>>>> callback) {
+                             CompletableFuture<DownloadCallback<Map<String, List<URLIcon>>>> callback) {
 
     }
 

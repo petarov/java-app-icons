@@ -1,5 +1,7 @@
 package net.vexelon.appicons.utils;
 
+import net.vexelon.appicons.AbstractAppIconsBuilder;
+
 import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -8,14 +10,17 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
-import java.util.logging.LogManager;
 import java.util.logging.Logger;
 
 public final class HttpFetcher {
 
     private static final Logger logger = Logger.getLogger(HttpFetcher.class.getName());
 
-    private long timeout = 30L;
+    private final AbstractAppIconsBuilder.BuilderConfig config;
+
+    public HttpFetcher(AbstractAppIconsBuilder.BuilderConfig config) {
+        this.config = config;
+    }
 
     private boolean isOk(HttpResponse<?> response) {
         return response.statusCode() / 100 == 2;
@@ -41,7 +46,7 @@ public final class HttpFetcher {
     private HttpRequest newRequest(String url) {
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .timeout(Duration.ofSeconds(timeout))
+                .timeout(Duration.ofSeconds(config.getTimeout() > -1 ? config.getTimeout() : 30L))
                 .build();
     }
 
@@ -63,13 +68,5 @@ public final class HttpFetcher {
         } catch (Throwable t) {
             throw new RuntimeException("Error downloading " + url, t);
         }
-    }
-
-    public long getTimeout() {
-        return timeout;
-    }
-
-    public void setTimeout(long timeout) {
-        this.timeout = timeout;
     }
 }

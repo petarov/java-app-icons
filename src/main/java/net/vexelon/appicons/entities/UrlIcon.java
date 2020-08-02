@@ -1,6 +1,6 @@
 package net.vexelon.appicons.entities;
 
-public class UrlIcon {
+public class URLIcon {
 
     private String url;
     private String type;
@@ -41,7 +41,7 @@ public class UrlIcon {
 
     @Override
     public String toString() {
-        return "UrlIcon{" +
+        return "URLIcon{" +
                 "url='" + url + '\'' +
                 ", type='" + type + '\'' +
                 ", width=" + width +

@@ -1,6 +1,6 @@
 package net.vexelon.appicons.appstore;
 
-import net.vexelon.appicons.entities.UrlIcon;
+import net.vexelon.appicons.entities.URLIcon;
 import net.vexelon.appicons.wireframe.IconParser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -19,15 +19,15 @@ public class AppStoreIconsParser implements IconParser {
 
     private static final Logger logger = Logger.getLogger(AppStoreIconsParser.class.getName());
 
-    private AppStoreIconsBuilder.AppStoreConfig config;
+    private final AppStoreIconsBuilder.AppStoreConfig config;
 
     public AppStoreIconsParser(AppStoreIconsBuilder.AppStoreConfig config) {
         this.config = config;
     }
 
     @Override
-    public List<UrlIcon> parse(InputStream input) {
-        var icons = new HashMap<Integer, UrlIcon>();
+    public List<URLIcon> parse(InputStream input) {
+        var icons = new HashMap<Integer, URLIcon>();
         String line = "";
         int resultsCount = 0;
 
@@ -48,7 +48,7 @@ public class AppStoreIconsParser implements IconParser {
                         if (!icons.containsKey(size)) {
                             String url = StringUtils.substringBetween(line, "\"artworkUrl" + size + "\":", ",");
                             if (!StringUtils.isBlank(url)) {
-                                var icon = new UrlIcon();
+                                var icon = new URLIcon();
                                 icon.setUrl(url.substring(1, url.length() - 1).strip());
                                 icon.setType("JPG");
                                 icon.setWidth(size);
