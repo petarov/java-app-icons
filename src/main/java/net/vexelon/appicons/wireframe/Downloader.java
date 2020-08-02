@@ -1,7 +1,7 @@
 package net.vexelon.appicons.wireframe;
 
-import net.vexelon.appicons.entities.FileIcon;
-import net.vexelon.appicons.entities.URLIcon;
+import net.vexelon.appicons.wireframe.entities.FileIcon;
+import net.vexelon.appicons.wireframe.entities.URLIcon;
 
 import java.nio.file.Path;
 import java.util.List;

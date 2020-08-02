@@ -1,6 +1,6 @@
 package net.vexelon.appicons.appstore;
 
-import net.vexelon.appicons.entities.URLIcon;
+import net.vexelon.appicons.wireframe.entities.URLIcon;
 import net.vexelon.appicons.wireframe.IconParser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -15,13 +15,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class AppStoreIconsParser implements IconParser {
+public class AppStoreParser implements IconParser {
 
-    private static final Logger logger = Logger.getLogger(AppStoreIconsParser.class.getName());
+    private static final Logger logger = Logger.getLogger(AppStoreParser.class.getName());
 
-    private final AppStoreIconsBuilder.AppStoreConfig config;
+    private final AppStoreBuilder.AppStoreConfig config;
 
-    public AppStoreIconsParser(AppStoreIconsBuilder.AppStoreConfig config) {
+    public AppStoreParser(AppStoreBuilder.AppStoreConfig config) {
         this.config = config;
     }
 

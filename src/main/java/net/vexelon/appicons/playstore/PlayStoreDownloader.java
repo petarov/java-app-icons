@@ -1,11 +1,10 @@
 package net.vexelon.appicons.playstore;
 
-import net.vexelon.appicons.entities.FileIcon;
-import net.vexelon.appicons.entities.URLIcon;
-import net.vexelon.appicons.utils.HttpFetcher;
+import net.vexelon.appicons.AbstractDownloader;
 import net.vexelon.appicons.utils.AppURLUtils;
 import net.vexelon.appicons.wireframe.DownloadCallback;
-import net.vexelon.appicons.wireframe.Downloader;
+import net.vexelon.appicons.wireframe.entities.FileIcon;
+import net.vexelon.appicons.wireframe.entities.URLIcon;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -13,20 +12,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class PlayStoreDownloader implements Downloader {
+public class PlayStoreDownloader extends AbstractDownloader<PlayStoreBuilder.PlayStoreConfig> {
 
-    private final PlayStoreIconsBuilder.PlayStoreConfig config;
-    private final HttpFetcher fetcher;
+    public PlayStoreDownloader(PlayStoreBuilder.PlayStoreConfig config) {
+        super(config);
+    }
 
-    public PlayStoreDownloader(PlayStoreIconsBuilder.PlayStoreConfig config) {
-        this.config = config;
-        this.fetcher = new HttpFetcher(config);
+    @Override
+    protected String getAppUrl(String appId) {
+        return AppURLUtils.playstore(appId, config.getCountry(), config.getLanguage());
     }
 
     @Override
     public List<URLIcon> getUrls(String appId) {
-        return new PlayStoreIconsParser(config).parse(
-                fetcher.getBlocking(AppURLUtils.playstore(appId, "", "")));
+        return new PlayStoreParser(config).parse(fetcher.getBlocking(getAppUrl(appId)));
     }
 
     @Override

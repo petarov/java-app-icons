@@ -1,6 +1,6 @@
 package net.vexelon.appicons.wireframe;
 
-import net.vexelon.appicons.entities.URLIcon;
+import net.vexelon.appicons.wireframe.entities.URLIcon;
 
 import java.io.InputStream;
 import java.util.List;

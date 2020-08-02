@@ -1,6 +1,6 @@
 package net.vexelon.appicons.playstore;
 
-import net.vexelon.appicons.entities.URLIcon;
+import net.vexelon.appicons.wireframe.entities.URLIcon;
 import net.vexelon.appicons.wireframe.IconParser;
 
 import java.io.BufferedReader;
@@ -13,13 +13,13 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public class PlayStoreIconsParser implements IconParser {
+public class PlayStoreParser implements IconParser {
 
-    private static final Logger logger = Logger.getLogger(PlayStoreIconsParser.class.getName());
+    private static final Logger logger = Logger.getLogger(PlayStoreParser.class.getName());
 
-    private final PlayStoreIconsBuilder.PlayStoreConfig config;
+    private final PlayStoreBuilder.PlayStoreConfig config;
 
-    public PlayStoreIconsParser(PlayStoreIconsBuilder.PlayStoreConfig config) {
+    public PlayStoreParser(PlayStoreBuilder.PlayStoreConfig config) {
         this.config = config;
     }
 

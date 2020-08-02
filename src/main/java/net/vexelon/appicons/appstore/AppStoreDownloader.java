@@ -1,11 +1,10 @@
 package net.vexelon.appicons.appstore;
 
-import net.vexelon.appicons.entities.FileIcon;
-import net.vexelon.appicons.entities.URLIcon;
+import net.vexelon.appicons.AbstractDownloader;
 import net.vexelon.appicons.utils.AppURLUtils;
-import net.vexelon.appicons.utils.HttpFetcher;
 import net.vexelon.appicons.wireframe.DownloadCallback;
-import net.vexelon.appicons.wireframe.Downloader;
+import net.vexelon.appicons.wireframe.entities.FileIcon;
+import net.vexelon.appicons.wireframe.entities.URLIcon;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -13,20 +12,20 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class AppStoreDownloader implements Downloader {
+public class AppStoreDownloader extends AbstractDownloader<AppStoreBuilder.AppStoreConfig> {
 
-    private final AppStoreIconsBuilder.AppStoreConfig config;
-    private final HttpFetcher fetcher;
+    public AppStoreDownloader(AppStoreBuilder.AppStoreConfig config) {
+        super(config);
+    }
 
-    public AppStoreDownloader(AppStoreIconsBuilder.AppStoreConfig config) {
-        this.config = config;
-        this.fetcher = new HttpFetcher(config);
+    @Override
+    protected String getAppUrl(String appId) {
+        return AppURLUtils.appstore(appId, config.getCountry(), config.getLanguage());
     }
 
     @Override
     public List<URLIcon> getUrls(String appId) {
-        return new AppStoreIconsParser(config).parse(
-                fetcher.getBlocking(AppURLUtils.appstore(appId, "", "")));
+        return new AppStoreParser(config).parse(fetcher.getBlocking(getAppUrl(appId)));
     }
 
     @Override

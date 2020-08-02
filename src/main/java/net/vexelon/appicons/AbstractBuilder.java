@@ -2,7 +2,7 @@ package net.vexelon.appicons;
 
 import net.vexelon.appicons.wireframe.Downloader;
 
-public abstract class AbstractAppIconsBuilder<BUILDER extends AbstractAppIconsBuilder<BUILDER>> {
+public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> {
 
     // TODO proxy
 

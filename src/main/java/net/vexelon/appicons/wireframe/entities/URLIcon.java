@@ -1,17 +1,26 @@
-package net.vexelon.appicons.entities;
+package net.vexelon.appicons.wireframe.entities;
 
-public class FileIcon {
+public class URLIcon {
 
-    private String path;
+    private String url;
+    private String type;
     private int width;
     private int height;
 
-    public String getPath() {
-        return path;
+    public String getUrl() {
+        return url;
     }
 
-    public void setPath(String path) {
-        this.path = path;
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public int getWidth() {
@@ -32,8 +41,9 @@ public class FileIcon {
 
     @Override
     public String toString() {
-        return "FileIcon{" +
-                "path='" + path + '\'' +
+        return "URLIcon{" +
+                "url='" + url + '\'' +
+                ", type='" + type + '\'' +
                 ", width=" + width +
                 ", height=" + height +
                 '}';

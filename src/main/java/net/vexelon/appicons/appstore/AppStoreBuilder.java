@@ -1,12 +1,12 @@
 package net.vexelon.appicons.appstore;
 
-import net.vexelon.appicons.AbstractAppIconsBuilder;
+import net.vexelon.appicons.AbstractBuilder;
 import net.vexelon.appicons.wireframe.Downloader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class AppStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreIconsBuilder> {
+public class AppStoreBuilder extends AbstractBuilder<AppStoreBuilder> {
 
     class AppStoreConfig extends BuilderConfig {
 
@@ -17,7 +17,7 @@ public class AppStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreIconsB
         }
     }
 
-    private AppStoreIconsBuilder.AppStoreConfig config = new AppStoreIconsBuilder.AppStoreConfig();
+    private AppStoreBuilder.AppStoreConfig config = new AppStoreBuilder.AppStoreConfig();
 
     @Override
     public BuilderConfig config() {
@@ -29,7 +29,7 @@ public class AppStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreIconsB
         return new AppStoreDownloader(config);
     }
 
-    public AppStoreIconsBuilder size60(boolean enabled) {
+    public AppStoreBuilder size60(boolean enabled) {
         if (enabled) {
             config.getSizes().add(60);
         } else {
@@ -38,7 +38,7 @@ public class AppStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreIconsB
         return this;
     }
 
-    public AppStoreIconsBuilder size100(boolean enabled) {
+    public AppStoreBuilder size100(boolean enabled) {
         if (enabled) {
             config.getSizes().add(100);
         } else {
@@ -47,7 +47,7 @@ public class AppStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreIconsB
         return this;
     }
 
-    public AppStoreIconsBuilder size512(boolean enabled) {
+    public AppStoreBuilder size512(boolean enabled) {
         if (enabled) {
             config.getSizes().add(512);
         } else {

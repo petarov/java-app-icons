@@ -1,12 +1,12 @@
 package net.vexelon.appicons.playstore;
 
-import net.vexelon.appicons.AbstractAppIconsBuilder;
+import net.vexelon.appicons.AbstractBuilder;
 import net.vexelon.appicons.wireframe.Downloader;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayStoreIconsBuilder extends AbstractAppIconsBuilder<PlayStoreIconsBuilder> {
+public class PlayStoreBuilder extends AbstractBuilder<PlayStoreBuilder> {
 
     class PlayStoreConfig extends BuilderConfig {
 
@@ -29,7 +29,7 @@ public class PlayStoreIconsBuilder extends AbstractAppIconsBuilder<PlayStoreIcon
         return new PlayStoreDownloader(config);
     }
 
-    public PlayStoreIconsBuilder sizes(int... sizes) {
+    public PlayStoreBuilder sizes(int... sizes) {
         for (var size : sizes) {
             if (size < 1) {
                 throw new RuntimeException(size + " is not a valid image size!");

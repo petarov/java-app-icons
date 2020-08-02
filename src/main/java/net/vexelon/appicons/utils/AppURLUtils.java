@@ -22,12 +22,12 @@ public final class AppURLUtils {
         sb.append("https://play.google.com/store/apps/details?id=").append(id);
 
         if (!country.isBlank()) {
-            sb.append("&hl=").append(country);
+            sb.append("&gl=").append(country);
         }
 
-//        if (!language.isBlank()) {
-//            sb.append("&lang=").append(language);
-//        }
+        if (!language.isBlank()) {
+            sb.append("&hl=").append(language);
+        }
 
         return sb.toString();
     }
