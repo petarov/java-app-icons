@@ -1,6 +1,6 @@
 package net.vexelon.appicons.playstore;
 
-import net.vexelon.appicons.wireframe.entities.URLIcon;
+import net.vexelon.appicons.wireframe.entities.IconURL;
 import net.vexelon.appicons.wireframe.IconParser;
 
 import java.io.BufferedReader;
@@ -24,8 +24,8 @@ public class PlayStoreParser implements IconParser {
     }
 
     @Override
-    public List<URLIcon> parse(InputStream input) {
-        var icons = new ArrayList<URLIcon>();
+    public List<IconURL> parse(InputStream input) {
+        var icons = new ArrayList<IconURL>();
 
         try (var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
             var buf = CharBuffer.allocate(4096);
@@ -61,7 +61,7 @@ public class PlayStoreParser implements IconParser {
                         }
 
                         if (config.getSizes().isEmpty()) {
-                            var icon = new URLIcon();
+                            var icon = new IconURL();
                             icon.setUrl(url);
                             icon.setType("PNG");
                             icon.setWidth(512);
@@ -69,7 +69,7 @@ public class PlayStoreParser implements IconParser {
                             icons.add(icon);
                         } else {
                             config.getSizes().forEach(size -> {
-                                var icon = new URLIcon();
+                                var icon = new IconURL();
                                 icon.setUrl(url + "=s" + size);
                                 icon.setType("PNG");
                                 icon.setWidth(size);

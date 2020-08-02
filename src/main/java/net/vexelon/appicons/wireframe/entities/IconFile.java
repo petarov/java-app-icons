@@ -1,6 +1,6 @@
 package net.vexelon.appicons.wireframe.entities;
 
-public class FileIcon {
+public class IconFile {
 
     private String path;
     private int width;

@@ -1,6 +1,6 @@
 package net.vexelon.appicons.wireframe.entities;
 
-public class URLIcon {
+public class IconURL {
 
     private String url;
     private String type;
