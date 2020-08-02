@@ -13,7 +13,7 @@ public final class AppIcons {
     }
 
     /**
-     * @return New Playstore icons download builder instance.
+     * @return New Play Store icons download builder instance.
      */
     public static PlayStoreIconsBuilder playstore() {
         return new PlayStoreIconsBuilder();

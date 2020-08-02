@@ -5,9 +5,12 @@ import net.vexelon.appicons.wireframe.IconParser;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.math.NumberUtils;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,13 +19,16 @@ public class AppStoreIconsParser implements IconParser {
 
     private static final Logger logger = Logger.getLogger(AppStoreIconsParser.class.getName());
 
+    private AppStoreIconsBuilder.AppStoreConfig config;
+
+    public AppStoreIconsParser(AppStoreIconsBuilder.AppStoreConfig config) {
+        this.config = config;
+    }
+
     @Override
     public List<UrlIcon> parse(InputStream input) {
-        var icons = new ArrayList<UrlIcon>();
+        var icons = new HashMap<Integer, UrlIcon>();
         String line = "";
-        String art60 = null;
-        String art100 = null;
-        String art512 = null;
         int resultsCount = 0;
 
         try (var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
@@ -35,50 +41,31 @@ public class AppStoreIconsParser implements IconParser {
                     resultsCount = NumberUtils.toInt(StringUtils.defaultString(
                             StringUtils.substringBetween(line, "\"resultCount\":", ",")).strip(),
                             0);
-                } else if (resultsCount > 0) {
-                    if (art60 == null) {
-                        art60 = StringUtils.substringBetween(line, "\"artworkUrl60\":", ",");
-                        if (!StringUtils.isBlank(art60)) {
-                            var icon = new UrlIcon();
-                            icon.setUrl(art60.strip());
-                            icon.setWidth(60);
-                            icon.setHeight(60);
-                            icons.add(icon);
-                        }
-                    }
+                }
 
-                    if (art100 == null) {
-                        art100 = StringUtils.substringBetween(line, "\"artworkUrl100\":", ",");
-                        if (!StringUtils.isBlank(art100)) {
-                            var icon = new UrlIcon();
-                            icon.setUrl(art100.strip());
-                            icon.setWidth(100);
-                            icon.setHeight(100);
-                            icons.add(icon);
-                        }
-                    }
-
-                    if (art512 == null) {
-                        art512 = StringUtils.substringBetween(line, "\"artworkUrl512\":", ",");
-                        if (!StringUtils.isBlank(art512)) {
-                            var icon = new UrlIcon();
-                            icon.setUrl(art512.strip());
-                            icon.setWidth(512);
-                            icon.setHeight(512);
-                            icons.add(icon);
+                if (resultsCount > 0) {
+                    for (var size : config.getSizes()) {
+                        if (!icons.containsKey(size)) {
+                            String url = StringUtils.substringBetween(line, "\"artworkUrl" + size + "\":", ",");
+                            if (!StringUtils.isBlank(url)) {
+                                var icon = new UrlIcon();
+                                icon.setUrl(url.substring(1, url.length() - 1).strip());
+                                icon.setType("JPG");
+                                icon.setWidth(size);
+                                icon.setHeight(size);
+                                icons.put(size, icon);
+                            }
                         }
                     }
                 }
 
-                // There are no more than 3 icon sizes for an app store app
-                if (icons.size() == 3) {
+                // Stop parsing, if all images requested were found
+                if (icons.size() == config.getSizes().size()) {
                     break;
                 }
-
-                line = reader.readLine();
             }
 
-            return icons;
+            return new ArrayList<>(icons.values());
         } catch (Exception e) {
             throw new RuntimeException("Error while parsing app store lookup result! Line=" + line, e);
         }

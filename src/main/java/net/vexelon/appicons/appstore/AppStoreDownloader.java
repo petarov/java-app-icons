@@ -16,14 +16,17 @@ import java.util.concurrent.CompletableFuture;
 public class AppStoreDownloader implements Downloader {
 
     private HttpFetcher fetcher;
+    private AppStoreIconsBuilder.AppStoreConfig config;
 
-    public AppStoreDownloader(HttpFetcher fetcher) {
+    public AppStoreDownloader(HttpFetcher fetcher, AppStoreIconsBuilder.AppStoreConfig config) {
         this.fetcher = fetcher;
+        this.config = config;
     }
 
     @Override
     public List<UrlIcon> getUrls(String appId) {
-        return new AppStoreIconsParser().parse(fetcher.getBlocking(UrlUtils.appstore(appId, "", "")));
+        return new AppStoreIconsParser(config).parse(
+                fetcher.getBlocking(UrlUtils.appstore(appId, "", "")));
     }
 
     @Override
