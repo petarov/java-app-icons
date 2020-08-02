@@ -23,13 +23,10 @@ public class AppStoreIconsParser implements IconParser {
         String art60 = null;
         String art100 = null;
         String art512 = null;
+        int resultsCount = 0;
 
-        try {
-            int resultsCount = 0;
-            var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
-
-            line = reader.readLine();
-            while (line != null) {
+        try (var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+            while ((line = reader.readLine()) != null) {
                 if (logger.isLoggable(Level.FINEST)) {
                     logger.log(Level.FINEST, "Line={0}", line);
                 }

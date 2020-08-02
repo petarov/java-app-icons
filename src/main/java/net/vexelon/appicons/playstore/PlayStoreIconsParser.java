@@ -23,22 +23,20 @@ public class PlayStoreIconsParser implements IconParser {
     @Override
     public List<UrlIcon> parse(InputStream input) {
         var icons = new ArrayList<UrlIcon>();
-        String line = "";
-        String img = null;
 
-        try {
-            int count = 0;
-            var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8));
+        try (var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
+            var buf = CharBuffer.allocate(4096);
 
-            line = reader.readLine();
-            while (line != null) {
-                if (logger.isLoggable(Level.INFO)) {
-                    logger.log(Level.INFO, "Line={0}", line);
+            // Using a char buffer instead of .readLine(), saves about 10K of reads
+            while (reader.read(buf) > 0) {
+                buf.flip();
+                String line = buf.toString();
+
+                if (logger.isLoggable(Level.FINEST)) {
+                    logger.log(Level.FINEST, "Line={0}", line);
                 }
 
-                count += line.length();
-
-                // Find the fierst image itemprop, because for what it seems, this is the app logo image.
+                // Find the first image itemprop, because for what it seems, this is the app logo image.
                 int needle = line.indexOf("itemprop=\"image\"");
                 if (needle > 0) {
                     // Search for the start of the image some 350 chars before the needle. This number is somewhat
@@ -48,12 +46,29 @@ public class PlayStoreIconsParser implements IconParser {
                         // find the last quote character surrounding the image url
                         int end = line.indexOf("\"", beginning + 10);
                         // start from the first quote that contains the image url till the last quote found
-                        img = line.substring(beginning + 10, end);
+                        String url = line.substring(beginning + 10, end).strip();
+
+                        var sizes = url.split("=s");
+                        if (sizes.length > 1) {
+                            url = sizes[0];
+                        }
 
                         var icon = new UrlIcon();
-                        icon.setUrl(img.strip());
+                        icon.setUrl(url);
+                        icon.setWidth(512);
+                        icon.setHeight(512);
+                        icons.add(icon);
+
+                        icon = new UrlIcon();
+                        icon.setUrl(url + "=s180");
                         icon.setWidth(180);
                         icon.setHeight(180);
+                        icons.add(icon);
+
+                        icon = new UrlIcon();
+                        icon.setUrl(url + "=s360");
+                        icon.setWidth(360);
+                        icon.setHeight(360);
                         icons.add(icon);
 
                         // we're done
@@ -61,14 +76,12 @@ public class PlayStoreIconsParser implements IconParser {
                     }
                 }
 
-                line = reader.readLine();
+                buf.clear();
             }
-
-            System.out.println("SIZE=" + count);
 
             return icons;
         } catch (Exception e) {
-            throw new RuntimeException("Error while parsing app store lookup result! Line=" + line, e);
+            throw new RuntimeException("Error while parsing play store lookup result!", e);
         }
     }
 }
