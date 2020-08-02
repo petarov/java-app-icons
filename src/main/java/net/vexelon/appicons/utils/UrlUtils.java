@@ -17,4 +17,19 @@ public final class UrlUtils {
         return sb.toString();
     }
 
+    public static String playstore(String id, String country, String language) {
+        var sb = new StringBuilder();
+        sb.append("https://play.google.com/store/apps/details?id=").append(id);
+
+        if (!country.isBlank()) {
+            sb.append("&hl=").append(country);
+        }
+
+//        if (!language.isBlank()) {
+//            sb.append("&lang=").append(language);
+//        }
+
+        return sb.toString();
+    }
+
 }

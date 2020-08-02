@@ -1,5 +1,6 @@
-package net.vexelon.appicons.appstore;
+package net.vexelon.appicons.playstore;
 
+import net.vexelon.appicons.appstore.AppStoreIconsParser;
 import net.vexelon.appicons.entities.FileIcon;
 import net.vexelon.appicons.entities.UrlIcon;
 import net.vexelon.appicons.utils.HttpFetcher;
@@ -13,17 +14,17 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
-public class AppStoreDownloader implements Downloader {
+public class PlayStoreDownloader implements Downloader {
 
     private HttpFetcher fetcher;
 
-    public AppStoreDownloader(HttpFetcher fetcher) {
+    public PlayStoreDownloader(HttpFetcher fetcher) {
         this.fetcher = fetcher;
     }
 
     @Override
     public List<UrlIcon> getUrls(String appId) {
-        return new AppStoreIconsParser().parse(fetcher.getBlocking(UrlUtils.appstore(appId, "", "")));
+        return new PlayStoreIconsParser().parse(fetcher.getBlocking(UrlUtils.playstore(appId, "", "")));
     }
 
     @Override

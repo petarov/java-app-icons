@@ -8,6 +8,6 @@ public class PlayStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreDownl
 
     @Override
     public Downloader build() {
-        return null;
+        return new PlayStoreDownloader(newHttpFetcher());
     }
 }
