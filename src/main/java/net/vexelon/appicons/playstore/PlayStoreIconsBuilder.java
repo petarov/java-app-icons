@@ -7,7 +7,7 @@ import net.vexelon.appicons.wireframe.Downloader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class PlayStoreIconsBuilder extends AbstractAppIconsBuilder<AppStoreDownloader> {
+public class PlayStoreIconsBuilder extends AbstractAppIconsBuilder<PlayStoreIconsBuilder> {
 
     class PlayStoreConfig {
 

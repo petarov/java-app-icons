@@ -5,11 +5,11 @@ public class Test {
     public static void main(String[] args) {
         try {
             var downloader = AppIcons.appstore()
-                    .size60(false)
-                    .size100(false)
                     .setCountry("de")
                     .setLanguage("de")
                     .timeout(200)
+                    .size60(false)
+                    .size100(false)
                     .build();
             downloader.getUrls("389801252").forEach(url -> System.out.println(url));
 
