@@ -18,6 +18,8 @@ public final class HttpFetcher {
 
     private final AbstractBuilder.BuilderConfig config;
 
+    private HttpClient client;
+
     public HttpFetcher(AbstractBuilder.BuilderConfig config) {
         this.config = config;
     }
@@ -34,13 +36,16 @@ public final class HttpFetcher {
         return response;
     }
 
-    private HttpClient newClient() {
-        return HttpClient.newBuilder()
-                .version(HttpClient.Version.HTTP_2)
-                .followRedirects(HttpClient.Redirect.NORMAL)
+    private HttpClient getClient() {
+        if (client == null) {
+            client = HttpClient.newBuilder()
+                    .version(HttpClient.Version.HTTP_2)
+                    .followRedirects(HttpClient.Redirect.NORMAL)
 //                .proxy(ProxySelector.of(new InetSocketAddress("www-proxy.com", 8080)))
 //                .authenticator(Authenticator.getDefault())
-                .build();
+                    .build();
+        }
+        return client;
     }
 
     private HttpRequest newRequest(String url) {
@@ -54,7 +59,7 @@ public final class HttpFetcher {
         logger.log(Level.FINE, "GET BIO: {0}", url);
         try {
             return verifyOk(
-                    newClient().send(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())).body();
+                    getClient().send(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())).body();
         } catch (Throwable t) {
             throw new RuntimeException("Error downloading " + url, t);
         }
@@ -63,7 +68,7 @@ public final class HttpFetcher {
     public void getNonBlocking(String url, CompletableFuture<InputStream> callback) {
         logger.log(Level.FINE, "GET NIO: {0}", url);
         try {
-            newClient().sendAsync(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())
+            getClient().sendAsync(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())
                     .thenAccept(response -> callback.complete(response.body()));
         } catch (Throwable t) {
             throw new RuntimeException("Error downloading " + url, t);
