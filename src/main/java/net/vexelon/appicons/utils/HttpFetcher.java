@@ -1,6 +1,6 @@
 package net.vexelon.appicons.utils;
 
-import net.vexelon.appicons.AbstractBuilder;
+import net.vexelon.appicons.BuilderConfig;
 
 import java.io.InputStream;
 import java.net.URI;
@@ -16,11 +16,11 @@ public final class HttpFetcher {
 
     private static final Logger logger = Logger.getLogger(HttpFetcher.class.getName());
 
-    private final AbstractBuilder.BuilderConfig config;
+    private final BuilderConfig config;
 
     private HttpClient client;
 
-    public HttpFetcher(AbstractBuilder.BuilderConfig config) {
+    public HttpFetcher(BuilderConfig config) {
         this.config = config;
     }
 

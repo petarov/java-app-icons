@@ -4,39 +4,6 @@ import net.vexelon.appicons.wireframe.Downloader;
 
 public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> {
 
-    // TODO proxy
-
-    public class BuilderConfig {
-
-        private long timeout = -1;
-        private String country;
-        private String language;
-
-        public long getTimeout() {
-            return timeout;
-        }
-
-        public void setTimeout(long timeout) {
-            this.timeout = timeout;
-        }
-
-        public String getCountry() {
-            return country;
-        }
-
-        public void setCountry(String country) {
-            this.country = country;
-        }
-
-        public String getLanguage() {
-            return language;
-        }
-
-        public void setLanguage(String language) {
-            this.language = language;
-        }
-    }
-
     @SuppressWarnings("unchecked") final BUILDER self() {
         return (BUILDER) this;
     }

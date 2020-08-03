@@ -13,7 +13,7 @@ public class Test {
                     .size60(false)
                     .size100(false)
                     .build();
-//            downloader.getUrls("389801252").forEach(url -> System.out.println(url));
+            downloader.getUrls("389801252").forEach(url -> System.out.println(url));
             downloader.getMultiUrls(Set.of("389801252", "310633997")).forEach((k, v) -> v.forEach(url -> System.out.println(url)));
 
 //            var downloader = AppIcons.playstore()

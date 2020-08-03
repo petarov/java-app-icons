@@ -1,6 +1,7 @@
 package net.vexelon.appicons.playstore;
 
 import net.vexelon.appicons.AbstractBuilder;
+import net.vexelon.appicons.BuilderConfig;
 import net.vexelon.appicons.wireframe.Downloader;
 
 import java.util.ArrayList;
