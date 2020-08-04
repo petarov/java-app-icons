@@ -7,8 +7,9 @@ public class Test {
     public static void main(String[] args) {
         try {
             var downloader = AppIcons.appstore()
-                    .setCountry("de")
-                    .setLanguage("de")
+                    .proxy(BuilderConfig.ProxyType.HTTP, "localhost", 8888)
+                    .country("de")
+                    .language("de")
                     .timeout(200)
                     .size60(false)
                     .size100(false)

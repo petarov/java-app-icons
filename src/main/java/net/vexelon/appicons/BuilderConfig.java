@@ -2,11 +2,17 @@ package net.vexelon.appicons;
 
 public class BuilderConfig {
 
-    // TODO proxy
+    public enum ProxyType {
+        NONE,
+        HTTP
+    }
 
     private long timeout = -1;
     private String country;
     private String language;
+    private ProxyType proxyType = ProxyType.NONE;
+    private String proxyHost = "";
+    private int proxyPort = -1;
 
     public long getTimeout() {
         return timeout;
@@ -30,5 +36,29 @@ public class BuilderConfig {
 
     public void setLanguage(String language) {
         this.language = language;
+    }
+
+    public ProxyType getProxyType() {
+        return proxyType;
+    }
+
+    public void setProxyType(ProxyType proxyType) {
+        this.proxyType = proxyType;
+    }
+
+    public String getProxyHost() {
+        return proxyHost;
+    }
+
+    public void setProxyHost(String proxyHost) {
+        this.proxyHost = proxyHost;
+    }
+
+    public int getProxyPort() {
+        return proxyPort;
+    }
+
+    public void setProxyPort(int proxyPort) {
+        this.proxyPort = proxyPort;
     }
 }

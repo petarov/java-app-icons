@@ -13,17 +13,24 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
         return self();
     }
 
-    public BUILDER setCountry(String country) {
+    public BUILDER country(String country) {
         config().setCountry(country);
         return self();
     }
 
-    public BUILDER setLanguage(String language) {
+    public BUILDER language(String language) {
         config().setLanguage(language);
         return self();
     }
 
-    public abstract BuilderConfig config();
+    public BUILDER proxy(BuilderConfig.ProxyType type, String host, int port) {
+        config().setProxyType(type);
+        config().setProxyHost(host);
+        config().setProxyPort(port);
+        return self();
+    }
+
+    protected abstract BuilderConfig config();
 
     public abstract Downloader build();
 }

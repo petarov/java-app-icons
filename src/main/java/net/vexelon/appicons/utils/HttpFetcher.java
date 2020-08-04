@@ -2,12 +2,16 @@ package net.vexelon.appicons.utils;
 
 import net.vexelon.appicons.BuilderConfig;
 
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.security.SecureRandom;
 import java.time.Duration;
+import java.util.Base64;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -38,19 +42,31 @@ public final class HttpFetcher {
 
     private HttpClient getClient() {
         if (client == null) {
-            client = HttpClient.newBuilder()
-                    .version(HttpClient.Version.HTTP_2)
-                    .followRedirects(HttpClient.Redirect.NORMAL)
-//                .proxy(ProxySelector.of(new InetSocketAddress("www-proxy.com", 8080)))
-//                .authenticator(Authenticator.getDefault())
-                    .build();
+            try {
+                var builder = HttpClient.newBuilder()
+                        .version(HttpClient.Version.HTTP_2)
+                        .followRedirects(HttpClient.Redirect.NORMAL);
+
+                if (config.getProxyType() != BuilderConfig.ProxyType.NONE) {
+                    var sslContext = SSLContext.getInstance("TLS");
+                    sslContext.init(null, new TrustManager[]{new TrustAllManager()}, new SecureRandom());
+                    builder.sslContext(sslContext);
+                    builder.proxy(new ProxySelectorConfig(config));
+                }
+
+                client = builder.build();
+            } catch (Exception e) {
+                throw new RuntimeException("Failed creating HTTP client!", e);
+            }
         }
         return client;
     }
 
     private HttpRequest newRequest(String url) {
+        String encoded = new String(Base64.getEncoder().encode("user:pass".getBytes()));
         return HttpRequest.newBuilder()
                 .uri(URI.create(url))
+//                .setHeader("Proxy-Authorization", "Basic " + encoded)
                 .timeout(Duration.ofSeconds(config.getTimeout() > -1 ? config.getTimeout() : 30L))
                 .build();
     }
