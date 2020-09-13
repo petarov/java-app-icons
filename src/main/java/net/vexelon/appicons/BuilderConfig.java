@@ -13,6 +13,9 @@ public class BuilderConfig {
     private ProxyType proxyType = ProxyType.NONE;
     private String proxyHost = "";
     private int proxyPort = -1;
+    private String proxyUser = "";
+    private String proxyPassword = "";
+    private boolean isSkipSSLVerify = false;
 
     public long getTimeout() {
         return timeout;
@@ -60,5 +63,29 @@ public class BuilderConfig {
 
     public void setProxyPort(int proxyPort) {
         this.proxyPort = proxyPort;
+    }
+
+    public String getProxyUser() {
+        return proxyUser;
+    }
+
+    public void setProxyUser(String proxyUser) {
+        this.proxyUser = proxyUser;
+    }
+
+    public String getProxyPassword() {
+        return proxyPassword;
+    }
+
+    public void setProxyPassword(String proxyPassword) {
+        this.proxyPassword = proxyPassword;
+    }
+
+    public boolean isSkipSSLVerify() {
+        return isSkipSSLVerify;
+    }
+
+    public void setSkipSSLVerify(boolean skipSSLVerify) {
+        isSkipSSLVerify = skipSSLVerify;
     }
 }

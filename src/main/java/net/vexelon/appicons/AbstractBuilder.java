@@ -30,6 +30,18 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
         return self();
     }
 
+    public BUILDER proxy(BuilderConfig.ProxyType type, String host, int port, String username, String password) {
+        proxy(type, host, port);
+        config().setProxyUser(username);
+        config().setProxyPassword(password);
+        return self();
+    }
+
+    public BUILDER skipSSLVerify(boolean skipSSLVerify) {
+        config().setSkipSSLVerify(skipSSLVerify);
+        return self();
+    }
+
     protected abstract BuilderConfig config();
 
     public abstract Downloader build();

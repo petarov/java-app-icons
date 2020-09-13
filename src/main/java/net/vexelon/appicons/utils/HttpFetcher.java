@@ -1,6 +1,7 @@
 package net.vexelon.appicons.utils;
 
 import net.vexelon.appicons.BuilderConfig;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;
@@ -9,6 +10,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
@@ -21,8 +23,8 @@ public final class HttpFetcher {
     private static final Logger logger = Logger.getLogger(HttpFetcher.class.getName());
 
     private final BuilderConfig config;
-
     private HttpClient client;
+    private String basicAuth;
 
     public HttpFetcher(BuilderConfig config) {
         this.config = config;
@@ -47,11 +49,19 @@ public final class HttpFetcher {
                         .version(HttpClient.Version.HTTP_2)
                         .followRedirects(HttpClient.Redirect.NORMAL);
 
-                if (config.getProxyType() != BuilderConfig.ProxyType.NONE) {
+                if (config.isSkipSSLVerify()) {
                     var sslContext = SSLContext.getInstance("TLS");
                     sslContext.init(null, new TrustManager[]{new TrustAllManager()}, new SecureRandom());
                     builder.sslContext(sslContext);
+                }
+
+                if (config.getProxyType() != BuilderConfig.ProxyType.NONE) {
                     builder.proxy(new ProxySelectorConfig(config));
+                }
+
+                if (StringUtils.isNoneBlank(config.getProxyUser())) {
+                    basicAuth = "Basic " + Base64.getEncoder().encodeToString(new StringBuilder().append(config.getProxyUser())
+                            .append(":").append(config.getProxyPassword()).toString().getBytes(StandardCharsets.UTF_8));
                 }
 
                 client = builder.build();
@@ -63,12 +73,15 @@ public final class HttpFetcher {
     }
 
     private HttpRequest newRequest(String url) {
-        String encoded = new String(Base64.getEncoder().encode("user:pass".getBytes()));
-        return HttpRequest.newBuilder()
+        var builder = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-//                .setHeader("Proxy-Authorization", "Basic " + encoded)
-                .timeout(Duration.ofSeconds(config.getTimeout() > -1 ? config.getTimeout() : 30L))
-                .build();
+                .timeout(Duration.ofSeconds(config.getTimeout() > -1 ? config.getTimeout() : 30L));
+
+        if (StringUtils.isNoneBlank(basicAuth)) {
+            builder.setHeader("Proxy-Authorization", basicAuth);
+        }
+
+        return builder.build();
     }
 
     public InputStream getBlocking(String url) {
