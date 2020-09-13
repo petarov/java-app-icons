@@ -29,17 +29,7 @@ public class PlayStoreDownloader extends AbstractDownloader<PlayStoreBuilder.Pla
     }
 
     @Override
-    public List<IconFile> getFiles(String appId, Path destination) {
-        return null;
-    }
-
-    @Override
     public Map<String, List<IconURL>> getMultiUrls(Set<String> appIds) {
-        return null;
-    }
-
-    @Override
-    public Map<String, List<IconFile>> getMultiFiles(Set<String> appIds, Path destination) {
         return null;
     }
 

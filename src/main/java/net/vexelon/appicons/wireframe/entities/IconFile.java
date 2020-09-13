@@ -3,6 +3,7 @@ package net.vexelon.appicons.wireframe.entities;
 public class IconFile {
 
     private String path;
+    private String extension;
     private int width;
     private int height;
 
@@ -12,6 +13,14 @@ public class IconFile {
 
     public void setPath(String path) {
         this.path = path;
+    }
+
+    public String getExtension() {
+        return extension;
+    }
+
+    public void setExtension(String extension) {
+        this.extension = extension;
     }
 
     public int getWidth() {
@@ -30,10 +39,10 @@ public class IconFile {
         this.height = height;
     }
 
-    @Override
-    public String toString() {
-        return "FileIcon{" +
+    @Override public String toString() {
+        return "IconFile{" +
                 "path='" + path + '\'' +
+                ", extension='" + extension + '\'' +
                 ", width=" + width +
                 ", height=" + height +
                 '}';

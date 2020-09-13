@@ -30,21 +30,11 @@ public class AppStoreDownloader extends AbstractDownloader<AppStoreBuilder.AppSt
     }
 
     @Override
-    public List<IconFile> getFiles(String appId, Path destination) {
-        return null;
-    }
-
-    @Override
     public Map<String, List<IconURL>> getMultiUrls(Set<String> appIds) {
         var result = new HashMap<String, List<IconURL>>();
         var parser = new AppStoreParser(config);
         appIds.forEach(appId -> result.put(appId, parser.parse(fetcher.getBlocking(getAppUrl(appId)))));
         return result;
-    }
-
-    @Override
-    public Map<String, List<IconFile>> getMultiFiles(Set<String> appIds, Path destination) {
-        return null;
     }
 
     @Override
