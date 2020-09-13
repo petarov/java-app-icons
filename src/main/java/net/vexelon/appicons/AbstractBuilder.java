@@ -13,6 +13,11 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
         return self();
     }
 
+    public BUILDER async(boolean enabled) {
+        config().setAsyncEnabled(enabled);
+        return self();
+    }
+
     public BUILDER country(String country) {
         config().setCountry(country);
         return self();

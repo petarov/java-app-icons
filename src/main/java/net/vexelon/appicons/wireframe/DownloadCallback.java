@@ -2,7 +2,7 @@ package net.vexelon.appicons.wireframe;
 
 public interface DownloadCallback<RESULT> {
 
-    void onError(Throwable t);
+    void onError(String appId, Throwable t);
 
-    void onSuccess(RESULT result);
+    void onSuccess(String appId, RESULT result);
 }

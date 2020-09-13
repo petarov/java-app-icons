@@ -7,9 +7,8 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.CompletableFuture;
 
-public interface Downloader {
+public interface Downloader extends AutoCloseable {
 
     /**
      * Fetches icon urls for a single {@code appId} in a blocking way.
@@ -36,28 +35,27 @@ public interface Downloader {
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getUrls(String appId, CompletableFuture<DownloadCallback<List<IconURL>>> callback);
+    void getUrls(String appId, DownloadCallback<List<IconURL>> callback);
 
     /**
      * Fetches icon files for a single {@code appId} in an asynchronous way.
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getFiles(String appId, Path destination, CompletableFuture<DownloadCallback<List<IconFile>>> callback);
+    void getFiles(String appId, Path destination, DownloadCallback<List<IconFile>> callback);
 
     /**
      * Fetches icon urls for multiple app identifiers {@code appIds} in an asynchronous way.
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getMultiUrls(String appId, CompletableFuture<DownloadCallback<Map<String, List<IconURL>>>> callback);
+    void getMultiUrls(Set<String> appIds, DownloadCallback<Map<String, List<IconURL>>> callback);
 
     /**
      * Fetches icon files for multiple app identifiers {@code appIds} in an asynchronous way.
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getMultiFiles(String appId, Path destination,
-                       CompletableFuture<DownloadCallback<Map<String, List<IconFile>>>> callback);
-
+    void getMultiFiles(Set<String> appIds, Path destination,
+                       DownloadCallback<Map<String, List<IconFile>>> callback);
 }

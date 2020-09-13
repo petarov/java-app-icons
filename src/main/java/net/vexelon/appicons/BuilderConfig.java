@@ -8,6 +8,7 @@ public class BuilderConfig {
     }
 
     private long timeout = -1;
+    private boolean isAsyncEnabled = false;
     private String country;
     private String language;
     private ProxyType proxyType = ProxyType.NONE;
@@ -19,6 +20,14 @@ public class BuilderConfig {
 
     public long getTimeout() {
         return timeout;
+    }
+
+    public boolean isAsyncEnabled() {
+        return isAsyncEnabled;
+    }
+
+    public void setAsyncEnabled(boolean asyncEnabled) {
+        isAsyncEnabled = asyncEnabled;
     }
 
     public void setTimeout(long timeout) {

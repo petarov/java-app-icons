@@ -1,6 +1,7 @@
 package net.vexelon.appicons.utils;
 
 import net.vexelon.appicons.BuilderConfig;
+import net.vexelon.appicons.wireframe.DownloadCallback;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.net.ssl.SSLContext;
@@ -14,17 +15,18 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
-import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class HttpFetcher {
+public final class HttpFetcher implements AutoCloseable {
 
     private static final Logger logger = Logger.getLogger(HttpFetcher.class.getName());
 
     private final BuilderConfig config;
     private HttpClient client;
     private String basicAuth;
+    private ExecutorService executorService;
 
     public HttpFetcher(BuilderConfig config) {
         this.config = config;
@@ -49,6 +51,10 @@ public final class HttpFetcher {
                         .version(HttpClient.Version.HTTP_2)
                         .followRedirects(HttpClient.Redirect.NORMAL);
 
+                if (config.isAsyncEnabled()) {
+                    builder.executor(executorService = Executors.newCachedThreadPool());
+                }
+
                 if (config.isSkipSSLVerify()) {
                     var sslContext = SSLContext.getInstance("TLS");
                     sslContext.init(null, new TrustManager[]{new TrustAllManager()}, new SecureRandom());
@@ -59,9 +65,9 @@ public final class HttpFetcher {
                     builder.proxy(new ProxySelectorConfig(config));
                 }
 
-                if (StringUtils.isNoneBlank(config.getProxyUser())) {
-                    basicAuth = "Basic " + Base64.getEncoder().encodeToString(new StringBuilder().append(config.getProxyUser())
-                            .append(":").append(config.getProxyPassword()).toString().getBytes(StandardCharsets.UTF_8));
+                if (StringUtils.isNotBlank(config.getProxyUser())) {
+                    basicAuth = "Basic " + Base64.getEncoder().encodeToString((config.getProxyUser() +
+                            ":" + config.getProxyPassword()).getBytes(StandardCharsets.UTF_8));
                 }
 
                 client = builder.build();
@@ -75,9 +81,10 @@ public final class HttpFetcher {
     private HttpRequest newRequest(String url) {
         var builder = HttpRequest.newBuilder()
                 .uri(URI.create(url))
+                .setHeader("User-Agent", "User Agent") // TODO
                 .timeout(Duration.ofSeconds(config.getTimeout() > -1 ? config.getTimeout() : 30L));
 
-        if (StringUtils.isNoneBlank(basicAuth)) {
+        if (StringUtils.isNotBlank(basicAuth)) {
             builder.setHeader("Proxy-Authorization", basicAuth);
         }
 
@@ -94,13 +101,39 @@ public final class HttpFetcher {
         }
     }
 
-    public void getNonBlocking(String url, CompletableFuture<InputStream> callback) {
+    public void getNonBlocking(String url, DownloadCallback<InputStream> callback) {
         logger.log(Level.FINE, "GET NIO: {0}", url);
         try {
+            if (!config.isAsyncEnabled()) {
+                throw new IllegalStateException("Async operations not supported! Enable the async flag in the builder first.");
+            }
             getClient().sendAsync(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())
-                    .thenAccept(response -> callback.complete(response.body()));
+                    .handle((response, ex) -> {
+                        InputStream input = null;
+                        if (ex != null) {
+                            callback.onError(url, ex);
+                        } else {
+                            input = response.body();
+                            callback.onSuccess(url, input);
+                        }
+                        return input;
+                    });
         } catch (Throwable t) {
             throw new RuntimeException("Error downloading " + url, t);
+        }
+    }
+
+    @Override
+    public void close() throws Exception {
+        if (executorService != null) {
+            executorService.shutdown();
+            try {
+                if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException e) {
+                executorService.shutdownNow();
+            }
         }
     }
 }
