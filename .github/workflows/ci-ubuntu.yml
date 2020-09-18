@@ -10,10 +10,10 @@ jobs:
         # test with LTS version and latest
         java: [ 11, 15 ]
     steps:
-      - uses: actions/checkout@latest
+      - uses: actions/checkout@v2
 
       - name: Set up JDK ${{ matrix.java }}
-        uses: cescoffier/setup-jdk@latest
+        uses: cescoffier/setup-jdk@v1
         with:
           java_version: ${{ matrix.java }}
           architecture: 'x64'
