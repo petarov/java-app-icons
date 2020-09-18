@@ -19,14 +19,14 @@ TODO
 
 ## Quick Start
 
-Fetch the Instagram icon with its 3 sizes (60x, 100x and 512x pixels) available on the App Store.
+Fetch the Instagram App Store icon urls for the 3 default icon sizes: 60x, 100x and 512x pixels.
 
 ```java
     var downloader = AppIcons.appstore().build();
     downloader.getUrls("389801252").forEach(iconUrl -> System.out.println(iconUrl.getUrl()));
 ``` 
 
-Do the same thing for the Google Play Instagram app. In that case we only fetch a single app icon of size 512x512.
+Do the same thing for the Google Play Instagram app. In this (default) case we only fetch a single app icon url of size 512x512.
 
 ```java
     var downloader = AppIcons.playstore().build();
@@ -38,7 +38,7 @@ Do the same thing for the Google Play Instagram app. In that case we only fetch 
     });
 ```
 
-Fetch the icons of several App Store apps with one API call.
+Fetch the icon urls of several App Store apps with a single API call.
 
 ```java
     appStoreDownloader.getMultiUrls(Set.of("389801252", "310633997")).forEach(
@@ -70,21 +70,22 @@ It works a bit different for Google Play. In this case one may specify an arbitr
 
 ## Download and Save on Disk
 
-In most cases one may decide to save the app icons fetched to a directory on the disk. This can be easily done using
-the `getFiles()` API method.
+There are use cases where one may wish to save the app icons directly to a path on the disk. This can be easily done using
+the `getFiles()` API method where the `path` parameter specifies a folder path. Each icon file name is a `SHA-1` value of 
+the corresponding url fetched. 
 
 ```java
     var path = Path.of("/Users/Profit/Downloads");
     var downloader = AppIcons.playstore().build();
     downloader.getFiles("com.instagram.android", path).forEach(iconUrl -> {
-        System.out.println("Path:" + iconUrl.getPath());
+        System.out.println("Path:" + iconUrl.getPath()); // e.g., 58bd9d753544bfb3364fe8cceda56d799c050ad6.png
         System.out.println("File extension: " + iconUrl.getExtension());
         System.out.println("Image width: " + iconUrl.getWidth());
         System.out.println("Image height: " + iconUrl.getHeight());
     });
 ```
 
-Multiple apps are also supported using the `getMultiFiles()` method.
+Multiple apps are also supported using the `getMultiFiles()` API call.
 
 ```java
     downloader.getMultiFiles(Set.of("com.instagram.android", "com.zhiliaoapp.musically"), path).forEach(iconUrl -> { ... });
@@ -106,9 +107,9 @@ currently only `HTTP` proxies are supported.
 
 ## Non-Blocking Downloads
 
-Let's think big! Say you need to use this library to download icons or fetch icon urls in a non-blocking way. Maybe this
-matches your server architecture better or allows for better utilization of resources. The async downloader the library
-provides has you covered.
+Let's think big! Say you need to use this library to download icon files or fetch icon urls in a non-blocking way. Maybe this
+matches your server architecture better or allows for better utilization of resources. The async downloader, this library
+provides, has you covered.
 
 ```java
     var executorService = Executors.newCachedThreadPool();
@@ -130,11 +131,11 @@ provides has you covered.
 
 You'll need to provide your own `ExecutorService`, something that your server application probably already has instantiated.
 
-The file download API works a bit differently in non-blocking mode. The download and save to disk operations are both non-blocking,
-therefore the callback gets notified as soon as a single icon/file entry gets processed for the apps specified.
+The file download API works a bit differently in non-blocking mode. The inner download and save to disk operations are both 
+non-blocking, therefore the callback gets notified as soon as a single icon/file entry gets processed for the apps specified.
 
 ```java
-    downloader.getMultiFiles(Set.of("net.vexelon.currencybg.app", "com.instagram.android"), path, new DownloadCallback<>() {
+    downloader.getMultiFiles(Set.of("com.zhiliaoapp.musically", "com.instagram.android"), path, new DownloadCallback<>() {
         @Override public void onError(String appId, Throwable t) {
             t.printStackTrace();
         }
