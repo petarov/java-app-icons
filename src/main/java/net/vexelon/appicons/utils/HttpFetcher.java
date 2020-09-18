@@ -15,18 +15,17 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
-import java.util.concurrent.*;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-public final class HttpFetcher implements AutoCloseable {
+public final class HttpFetcher {
 
     private static final Logger logger = Logger.getLogger(HttpFetcher.class.getName());
 
     private final BuilderConfig config;
     private HttpClient client;
     private String basicAuth;
-    private ExecutorService executorService;
 
     public HttpFetcher(BuilderConfig config) {
         this.config = config;
@@ -50,10 +49,6 @@ public final class HttpFetcher implements AutoCloseable {
                 var builder = HttpClient.newBuilder()
                         .version(HttpClient.Version.HTTP_2)
                         .followRedirects(HttpClient.Redirect.NORMAL);
-
-                if (config.isAsyncEnabled()) {
-                    builder.executor(executorService = Executors.newCachedThreadPool());
-                }
 
                 if (config.isSkipSSLVerify()) {
                     var sslContext = SSLContext.getInstance("TLS");
@@ -103,37 +98,30 @@ public final class HttpFetcher implements AutoCloseable {
 
     public void getNonBlocking(String url, DownloadCallback<InputStream> callback) {
         logger.log(Level.FINE, "GET NIO: {0}", url);
+        Objects.requireNonNull(config.getExecutorService(), "Async operations not supported! An executor service was not provided the builder.");
+
         try {
-            if (!config.isAsyncEnabled()) {
-                throw new IllegalStateException("Async operations not supported! Enable the async flag in the builder first.");
-            }
-            getClient().sendAsync(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())
-                    .handle((response, ex) -> {
-                        InputStream input = null;
-                        if (ex != null) {
-                            callback.onError(url, ex);
-                        } else {
-                            input = response.body();
-                            callback.onSuccess(url, input);
-                        }
-                        return input;
-                    });
+            config.getExecutorService().execute(() -> {
+                try {
+                    callback.onSuccess(url, verifyOk(
+                            getClient().send(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())).body());
+                } catch (Throwable t) {
+                    callback.onError(url, t);
+                }
+            });
+//            getClient().sendAsync(newRequest(url), HttpResponse.BodyHandlers.ofInputStream())
+//                    .handle((response, ex) -> {
+//                        InputStream input = null;
+//                        if (ex != null) {
+//                            callback.onError(url, ex);
+//                        } else {
+//                            input = response.body();
+//                            callback.onSuccess(url, input);
+//                        }
+//                        return input;
+//                    });
         } catch (Throwable t) {
             throw new RuntimeException("Error downloading " + url, t);
-        }
-    }
-
-    @Override
-    public void close() throws Exception {
-        if (executorService != null) {
-            executorService.shutdown();
-            try {
-                if (!executorService.awaitTermination(5, TimeUnit.SECONDS)) {
-                    executorService.shutdownNow();
-                }
-            } catch (InterruptedException e) {
-                executorService.shutdownNow();
-            }
         }
     }
 }

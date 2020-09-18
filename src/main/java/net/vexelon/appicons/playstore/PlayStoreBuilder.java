@@ -2,10 +2,13 @@ package net.vexelon.appicons.playstore;
 
 import net.vexelon.appicons.AbstractBuilder;
 import net.vexelon.appicons.BuilderConfig;
-import net.vexelon.appicons.wireframe.Downloader;
+import net.vexelon.appicons.wireframe.AsyncDownloader;
+import net.vexelon.appicons.wireframe.SyncDownloader;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.concurrent.ExecutorService;
 
 public class PlayStoreBuilder extends AbstractBuilder<PlayStoreBuilder> {
 
@@ -26,7 +29,14 @@ public class PlayStoreBuilder extends AbstractBuilder<PlayStoreBuilder> {
     }
 
     @Override
-    public Downloader build() {
+    public SyncDownloader build() {
+        return new PlayStoreDownloader(config);
+    }
+
+    @Override
+    public AsyncDownloader buildAsync(ExecutorService executorService) {
+        Objects.requireNonNull(executorService, "Async operations require an executor service!");
+        config.setExecutorService(executorService);
         return new PlayStoreDownloader(config);
     }
 

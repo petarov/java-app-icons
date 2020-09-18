@@ -8,27 +8,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface Downloader extends AutoCloseable {
-
-    /**
-     * Fetches icon urls for a single {@code appId} in a blocking way.
-     */
-    List<IconURL> getUrls(String appId);
-
-    /**
-     * Fetches icon files for a single {@code appId} in a blocking way.
-     */
-    List<IconFile> getFiles(String appId, Path destination);
-
-    /**
-     * Fetches icon urls for multiple app identifiers {@code appIds} in a blocking way.
-     */
-    Map<String, List<IconURL>> getMultiUrls(Set<String> appIds);
-
-    /**
-     * Fetches icon files for multiple app identifiers {@code appIds} in a blocking way.
-     */
-    Map<String, List<IconFile>> getMultiFiles(Set<String> appIds, Path destination);
+public interface AsyncDownloader {
 
     /**
      * Fetches icon urls for a single {@code appId} in an asynchronous way.
@@ -49,7 +29,7 @@ public interface Downloader extends AutoCloseable {
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getMultiUrls(Set<String> appIds, DownloadCallback<Map<String, List<IconURL>>> callback);
+    void getMultiUrls(Set<String> appIds, DownloadCallback<List<IconURL>> callback);
 
     /**
      * Fetches icon files for multiple app identifiers {@code appIds} in an asynchronous way.

@@ -1,6 +1,9 @@
 package net.vexelon.appicons;
 
-import net.vexelon.appicons.wireframe.Downloader;
+import net.vexelon.appicons.wireframe.AsyncDownloader;
+import net.vexelon.appicons.wireframe.SyncDownloader;
+
+import java.util.concurrent.ExecutorService;
 
 public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> {
 
@@ -13,8 +16,8 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
         return self();
     }
 
-    public BUILDER async(boolean enabled) {
-        config().setAsyncEnabled(enabled);
+    public BUILDER async(ExecutorService executorService) {
+        config().setExecutorService(executorService);
         return self();
     }
 
@@ -49,5 +52,7 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
 
     protected abstract BuilderConfig config();
 
-    public abstract Downloader build();
+    public abstract SyncDownloader build();
+
+    public abstract AsyncDownloader buildAsync(ExecutorService executorService);
 }

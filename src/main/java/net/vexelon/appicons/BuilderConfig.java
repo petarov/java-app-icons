@@ -1,5 +1,7 @@
 package net.vexelon.appicons;
 
+import java.util.concurrent.ExecutorService;
+
 public class BuilderConfig {
 
     public enum ProxyType {
@@ -8,7 +10,7 @@ public class BuilderConfig {
     }
 
     private long timeout = -1;
-    private boolean isAsyncEnabled = false;
+    private ExecutorService executorService;
     private String country;
     private String language;
     private ProxyType proxyType = ProxyType.NONE;
@@ -22,12 +24,12 @@ public class BuilderConfig {
         return timeout;
     }
 
-    public boolean isAsyncEnabled() {
-        return isAsyncEnabled;
+    public ExecutorService getExecutorService() {
+        return executorService;
     }
 
-    public void setAsyncEnabled(boolean asyncEnabled) {
-        isAsyncEnabled = asyncEnabled;
+    public void setExecutorService(ExecutorService executorService) {
+        this.executorService = executorService;
     }
 
     public void setTimeout(long timeout) {

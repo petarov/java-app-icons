@@ -2,8 +2,9 @@ package net.vexelon.appicons;
 
 import net.vexelon.appicons.utils.HashingUtils;
 import net.vexelon.appicons.utils.HttpFetcher;
+import net.vexelon.appicons.wireframe.AsyncDownloader;
 import net.vexelon.appicons.wireframe.DownloadCallback;
-import net.vexelon.appicons.wireframe.Downloader;
+import net.vexelon.appicons.wireframe.SyncDownloader;
 import net.vexelon.appicons.wireframe.entities.IconFile;
 import net.vexelon.appicons.wireframe.entities.IconURL;
 
@@ -18,7 +19,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implements Downloader {
+public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implements SyncDownloader, AsyncDownloader {
 
     protected final CONFIG config;
     protected final HttpFetcher fetcher;
@@ -94,29 +95,21 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
     }
 
     @Override
-    public void getMultiUrls(Set<String> appIds, DownloadCallback<Map<String, List<IconURL>>> callback) {
-        var result = new HashMap<String, List<IconURL>>();
+    public void getMultiUrls(Set<String> appIds, DownloadCallback<List<IconURL>> callback) {
         appIds.forEach(appId -> fetcher.getNonBlocking(getAppUrl(appId), new DownloadCallback<>() {
             @Override public void onError(String url, Throwable t) {
                 callback.onError(appId, t);
             }
 
             @Override public void onSuccess(String url, InputStream inputStream) {
-                result.put(appId, parse(inputStream));
+                callback.onSuccess(appId, parse(inputStream)); // TODO
             }
         }));
-
-        callback.onSuccess("", result); // TODO
     }
 
     @Override
     public void getMultiFiles(Set<String> appIds, Path destination,
                               DownloadCallback<Map<String, List<IconFile>>> callback) {
         // TODO
-    }
-
-    @Override
-    public void close() throws Exception {
-        fetcher.close();
     }
 }
