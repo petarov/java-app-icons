@@ -16,8 +16,8 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
         return self();
     }
 
-    public BUILDER async(ExecutorService executorService) {
-        config().setExecutorService(executorService);
+    public BUILDER userAgent(String userAgent) {
+        config().setUserAgent(userAgent);
         return self();
     }
 

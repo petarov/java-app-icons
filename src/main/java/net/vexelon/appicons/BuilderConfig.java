@@ -4,12 +4,15 @@ import java.util.concurrent.ExecutorService;
 
 public class BuilderConfig {
 
+    public static final String DEFAULT_USER_AGENT = "java-app-icons/1.0";
+
     public enum ProxyType {
         NONE,
         HTTP
     }
 
     private long timeout = -1;
+    private String userAgent = DEFAULT_USER_AGENT;
     private ExecutorService executorService;
     private String country;
     private String language;
@@ -24,16 +27,24 @@ public class BuilderConfig {
         return timeout;
     }
 
+    public void setTimeout(long timeout) {
+        this.timeout = timeout;
+    }
+
+    public String getUserAgent() {
+        return userAgent;
+    }
+
+    public void setUserAgent(String userAgent) {
+        this.userAgent = userAgent;
+    }
+
     public ExecutorService getExecutorService() {
         return executorService;
     }
 
     public void setExecutorService(ExecutorService executorService) {
         this.executorService = executorService;
-    }
-
-    public void setTimeout(long timeout) {
-        this.timeout = timeout;
     }
 
     public String getCountry() {

@@ -75,7 +75,7 @@ public final class HttpFetcher {
     private HttpRequest newRequest(String url) {
         var builder = HttpRequest.newBuilder()
                 .uri(URI.create(url))
-                .setHeader("User-Agent", "User Agent") // TODO
+                .setHeader("User-Agent", config.getUserAgent())
                 .timeout(Duration.ofSeconds(config.getTimeout() > -1 ? config.getTimeout() : 30L));
 
         if (StringUtils.isNotBlank(basicAuth)) {
