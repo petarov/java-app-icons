@@ -2,7 +2,6 @@ package net.vexelon.appicons.utils;
 
 import net.vexelon.appicons.BuilderConfig;
 import net.vexelon.appicons.wireframe.DownloadCallback;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManager;

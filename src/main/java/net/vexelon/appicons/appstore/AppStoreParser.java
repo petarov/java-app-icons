@@ -1,9 +1,8 @@
 package net.vexelon.appicons.appstore;
 
-import net.vexelon.appicons.wireframe.entities.IconURL;
+import net.vexelon.appicons.utils.StringUtils;
 import net.vexelon.appicons.wireframe.IconParser;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.math.NumberUtils;
+import net.vexelon.appicons.wireframe.entities.IconURL;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -38,7 +37,7 @@ public class AppStoreParser implements IconParser {
                 }
 
                 if (resultsCount == 0) {
-                    resultsCount = NumberUtils.toInt(StringUtils.defaultString(
+                    resultsCount = StringUtils.toInt(StringUtils.defaultString(
                             StringUtils.substringBetween(line, "\"resultCount\":", ",")).strip(),
                             0);
                 }
