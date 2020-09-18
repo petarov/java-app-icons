@@ -6,14 +6,14 @@ Java App Icons
 
 Fetch urls or download app icons for any App Store or Play Store app. 
 
-  - Requires Java 11
+  - Requires `Java 11` or above
   - Zero transitive dependencies
   - Fluent builder interface
   - Supports non-blocking downloads
 
 # Installation
 
-TODO
+// TODO
 
 # Usage
 
@@ -30,7 +30,7 @@ Do the same thing for the Google Play Instagram app. In this (default) case we o
 
 ```java
     var downloader = AppIcons.playstore().build();
-    downloader.getUrls("com.instagram.android").forEach(iconUrl ->{
+    downloader.getUrls("com.instagram.android").forEach(iconUrl -> {
         System.out.println("URL:" + iconUrl.getUrl());
         System.out.println("File type: " + iconUrl.getType());
         System.out.println("Image width: " + iconUrl.getWidth());
