@@ -1,5 +1,6 @@
 package net.vexelon.appicons;
 
+import net.vexelon.appicons.utils.FileUtils;
 import net.vexelon.appicons.utils.HashingUtils;
 import net.vexelon.appicons.utils.HttpFetcher;
 import net.vexelon.appicons.wireframe.AsyncDownloader;
@@ -10,9 +11,13 @@ import net.vexelon.appicons.wireframe.entities.IconURL;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.ByteBuffer;
+import java.nio.channels.AsynchronousFileChannel;
+import java.nio.channels.CompletionHandler;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.nio.file.StandardOpenOption;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -50,6 +55,52 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
         }
     }
 
+    private void toIconFiles(String appId, List<IconURL> iconUrls, Path destination, DownloadCallback<IconFile> callback) {
+        iconUrls.forEach(iconURL -> {
+            var type = iconURL.getType().toLowerCase();
+            var copyToPath = destination.resolve(HashingUtils.sha1(iconURL.getUrl()) + "." + type);
+
+            fetcher.getNonBlocking(iconURL.getUrl(), new DownloadCallback<>() {
+                @Override
+                public void onError(String innerAppId, Throwable t) {
+                    callback.onError(appId, t);
+                }
+
+                @Override
+                public void onSuccess(String innerAppId, InputStream inputStream) {
+                    try (var input = inputStream) {
+                        var channel = AsynchronousFileChannel.open(
+                                copyToPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
+
+                        channel.write(ByteBuffer.wrap(input.readAllBytes()), 0, channel, new CompletionHandler<>() {
+
+                            @Override
+                            public void completed(Integer result, AsynchronousFileChannel attachment) {
+                                FileUtils.closeQuietly(attachment);
+
+                                var iconFile = new IconFile();
+                                iconFile.setPath(copyToPath.toString());
+                                iconFile.setExtension(type);
+                                iconFile.setWidth(iconURL.getWidth());
+                                iconFile.setHeight(iconURL.getHeight());
+
+                                callback.onSuccess(appId, iconFile);
+                            }
+
+                            @Override
+                            public void failed(Throwable exc, AsynchronousFileChannel attachment) {
+                                FileUtils.closeQuietly(attachment);
+                                callback.onError(appId, exc);
+                            }
+                        });
+                    } catch (IOException e) {
+                        callback.onError(appId, e);
+                    }
+                }
+            });
+        });
+    }
+
     @Override
     public List<IconURL> getUrls(String appId) {
         return parse(fetcher.getBlocking(getAppUrl(appId)));
@@ -70,7 +121,7 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
     @Override
     public Map<String, List<IconFile>> getMultiFiles(Set<String> appIds, Path destination) {
         return getMultiUrls(appIds).entrySet().stream().collect(Collectors.toMap(
-                entry -> entry.getKey(),
+                Map.Entry::getKey,
                 entry -> entry.getValue().stream().map(iconURL ->
                         toIconFile(iconURL, destination)).collect(Collectors.toList())
         ));
@@ -79,37 +130,59 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
     @Override
     public void getUrls(String appId, DownloadCallback<List<IconURL>> callback) {
         fetcher.getNonBlocking(getAppUrl(appId), new DownloadCallback<>() {
-            @Override public void onError(String url, Throwable t) {
+            @Override
+            public void onError(String url, Throwable t) {
                 callback.onError(appId, t);
             }
 
-            @Override public void onSuccess(String url, InputStream inputStream) {
+            @Override
+            public void onSuccess(String url, InputStream inputStream) {
                 callback.onSuccess(appId, parse(inputStream));
             }
         });
     }
 
     @Override
-    public void getFiles(String appId, Path destination, DownloadCallback<List<IconFile>> callback) {
-        // TODO
+    public void getFiles(String appId, Path destination, DownloadCallback<IconFile> callback) {
+        getUrls(appId, new DownloadCallback<>() {
+            @Override public void onError(String appId, Throwable t) {
+                callback.onError(appId, t);
+            }
+
+            @Override public void onSuccess(String appId, List<IconURL> iconUrls) {
+                toIconFiles(appId, iconUrls, destination, callback);
+            }
+        });
     }
 
     @Override
     public void getMultiUrls(Set<String> appIds, DownloadCallback<List<IconURL>> callback) {
         appIds.forEach(appId -> fetcher.getNonBlocking(getAppUrl(appId), new DownloadCallback<>() {
-            @Override public void onError(String url, Throwable t) {
+            @Override
+            public void onError(String url, Throwable t) {
                 callback.onError(appId, t);
             }
 
-            @Override public void onSuccess(String url, InputStream inputStream) {
-                callback.onSuccess(appId, parse(inputStream)); // TODO
+            @Override
+            public void onSuccess(String url, InputStream inputStream) {
+                callback.onSuccess(appId, parse(inputStream));
             }
         }));
     }
 
     @Override
-    public void getMultiFiles(Set<String> appIds, Path destination,
-                              DownloadCallback<Map<String, List<IconFile>>> callback) {
-        // TODO
+    public void getMultiFiles(Set<String> appIds, Path destination, DownloadCallback<IconFile> callback) {
+        getMultiUrls(appIds, new DownloadCallback<>() {
+            @Override
+            public void onError(String appId, Throwable t) {
+                callback.onError(appId, t);
+            }
+
+            @Override
+            public void onSuccess(String appId, List<IconURL> iconUrls) {
+                toIconFiles(appId, iconUrls, destination, callback);
+            }
+        });
     }
+
 }

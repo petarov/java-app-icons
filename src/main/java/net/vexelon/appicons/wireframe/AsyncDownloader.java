@@ -5,7 +5,6 @@ import net.vexelon.appicons.wireframe.entities.IconURL;
 
 import java.nio.file.Path;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public interface AsyncDownloader {
@@ -22,7 +21,7 @@ public interface AsyncDownloader {
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getFiles(String appId, Path destination, DownloadCallback<List<IconFile>> callback);
+    void getFiles(String appId, Path destination, DownloadCallback<IconFile> callback);
 
     /**
      * Fetches icon urls for multiple app identifiers {@code appIds} in an asynchronous way.
@@ -37,5 +36,5 @@ public interface AsyncDownloader {
      * The {@code callback} will be invoked when the operation is completed.
      */
     void getMultiFiles(Set<String> appIds, Path destination,
-                       DownloadCallback<Map<String, List<IconFile>>> callback);
+                       DownloadCallback<IconFile> callback);
 }

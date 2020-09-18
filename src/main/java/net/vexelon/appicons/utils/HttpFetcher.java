@@ -15,7 +15,6 @@ import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.time.Duration;
 import java.util.Base64;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -98,8 +97,6 @@ public final class HttpFetcher {
 
     public void getNonBlocking(String url, DownloadCallback<InputStream> callback) {
         logger.log(Level.FINE, "GET NIO: {0}", url);
-        Objects.requireNonNull(config.getExecutorService(), "Async operations not supported! An executor service was not provided the builder.");
-
         try {
             config.getExecutorService().execute(() -> {
                 try {
