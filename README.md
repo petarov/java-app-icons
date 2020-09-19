@@ -56,9 +56,9 @@ Do the same thing for the Google Play Instagram app. By default, fetches only a 
 var downloader = AppIcons.playstore().build();
 downloader.getUrls("com.instagram.android").forEach(iconUrl -> {
     System.out.println("URL:" + iconUrl.getUrl());
-    System.out.println("Image type: " + iconUrl.getType());
-    System.out.println("Image width: " + iconUrl.getWidth());
-    System.out.println("Image height: " + iconUrl.getHeight());
+    System.out.println("Image type: " + iconUrl.getType()); // PNG
+    System.out.println("Image width: " + iconUrl.getWidth()); // 512
+    System.out.println("Image height: " + iconUrl.getHeight()); // 512
 });
 
 ```
@@ -68,9 +68,9 @@ Fetch the icon urls of several App Store apps with a single API call.
 ```java
 
 appStoreDownloader.getMultiUrls(Set.of("389801252", "310633997")).forEach(
-    (k, v) -> v.forEach(icon -> System.out.println(icon)));
+    (k, v) -> v.forEach(iconUrl -> System.out.println(iconUrl)));
 playStoreDownloader.getMultiUrls(Set.of("com.instagram.android", "com.zhiliaoapp.musically")).forEach(
-    (k, v) -> v.forEach(icon -> System.out.println(icon)));
+    (k, v) -> v.forEach(iconUrl -> System.out.println(iconUrl)));
 
 ```
 
@@ -108,11 +108,11 @@ the corresponding url fetched.
 
 var path = Path.of("/Users/Profit/Downloads");
 var downloader = AppIcons.playstore().build();
-downloader.getFiles("com.instagram.android", path).forEach(iconUrl -> {
-    System.out.println("Path:" + iconUrl.getPath()); // e.g., 58bd9d753544bfb3364fe8cceda56d799c050ad6.png
-    System.out.println("File extension: " + iconUrl.getExtension());
-    System.out.println("Image width: " + iconUrl.getWidth());
-    System.out.println("Image height: " + iconUrl.getHeight());
+downloader.getFiles("com.instagram.android", path).forEach(iconFile -> {
+    System.out.println("Path:" + iconFile.getPath()); // e.g., 58bd9d753544bfb3364fe8cceda56d799c050ad6.png
+    System.out.println("File extension: " + iconFile.getExtension());
+    System.out.println("Image width: " + iconFile.getWidth());
+    System.out.println("Image height: " + iconFile.getHeight());
 });
 
 ```
@@ -143,8 +143,8 @@ var downloader = AppIcons.appstore()
 
 ## Non-Blocking Downloads
 
-Let's think big! Say you need to use this library to download icon files or fetch icon urls in a non-blocking way. Maybe this
-matches your server architecture better or allows for better utilization of resources. The async downloader has you covered.
+Let's say you need to use this library to download icon files or fetch icon urls in a non-blocking way. Maybe this
+matches your server architecture better or allows for better utilization of resources. The non-blocking downloader has you covered.
 
 ```java
 
@@ -152,7 +152,7 @@ var executorService = Executors.newCachedThreadPool();
 var downloader = AppIcons.appstore()
         .country("us")
         .language("en")
-        .buildAsync(executorService);
+        .buildNio(executorService);
 
 downloader.getUrls("com.instagram.android", new DownloadCallback<>() {
     @Override public void onError(String appId, Throwable t) {
@@ -167,6 +167,8 @@ downloader.getUrls("com.instagram.android", new DownloadCallback<>() {
 ```
 
 You'll need to provide your own `ExecutorService`, something that your server application probably already has instantiated.
+There are different strategies about what [type of ExecutorService](https://dzone.com/articles/java-executor-service-types) 
+to use depending on the particular use case.
 
 The file download API works a bit differently in non-blocking mode. The inner download and save to disk operations are both 
 non-blocking, therefore the callback gets notified as soon as a single icon entry gets processed for the apps specified.
@@ -178,8 +180,8 @@ downloader.getMultiFiles(Set.of("com.zhiliaoapp.musically", "com.instagram.andro
         t.printStackTrace();
     }
 
-    @Override public void onSuccess(String appId, IconFile file) {
-        System.out.println("APP: " + appId + "  " + file);
+    @Override public void onSuccess(String appId, IconFile iconFile) {
+        System.out.println("App=" + appId + " File=" + iconFile);
     }
 });
 
