@@ -1,7 +1,7 @@
 package net.vexelon.appicons;
 
-import net.vexelon.appicons.wireframe.AsyncDownloader;
-import net.vexelon.appicons.wireframe.SyncDownloader;
+import net.vexelon.appicons.wireframe.NioDownloader;
+import net.vexelon.appicons.wireframe.BioDownloader;
 
 import java.util.concurrent.ExecutorService;
 
@@ -52,7 +52,7 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
 
     protected abstract BuilderConfig config();
 
-    public abstract SyncDownloader build();
+    public abstract BioDownloader build();
 
-    public abstract AsyncDownloader buildAsync(ExecutorService executorService);
+    public abstract NioDownloader buildNio(ExecutorService executorService);
 }

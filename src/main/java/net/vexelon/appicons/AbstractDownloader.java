@@ -3,9 +3,9 @@ package net.vexelon.appicons;
 import net.vexelon.appicons.utils.FileUtils;
 import net.vexelon.appicons.utils.HashingUtils;
 import net.vexelon.appicons.utils.HttpFetcher;
-import net.vexelon.appicons.wireframe.AsyncDownloader;
+import net.vexelon.appicons.wireframe.NioDownloader;
 import net.vexelon.appicons.wireframe.DownloadCallback;
-import net.vexelon.appicons.wireframe.SyncDownloader;
+import net.vexelon.appicons.wireframe.BioDownloader;
 import net.vexelon.appicons.wireframe.entities.IconFile;
 import net.vexelon.appicons.wireframe.entities.IconURL;
 
@@ -25,7 +25,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implements SyncDownloader, AsyncDownloader {
+public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implements BioDownloader, NioDownloader {
 
     protected final CONFIG config;
     protected final HttpFetcher fetcher;

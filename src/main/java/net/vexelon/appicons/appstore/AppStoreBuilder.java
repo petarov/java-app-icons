@@ -2,8 +2,8 @@ package net.vexelon.appicons.appstore;
 
 import net.vexelon.appicons.AbstractBuilder;
 import net.vexelon.appicons.BuilderConfig;
-import net.vexelon.appicons.wireframe.AsyncDownloader;
-import net.vexelon.appicons.wireframe.SyncDownloader;
+import net.vexelon.appicons.wireframe.NioDownloader;
+import net.vexelon.appicons.wireframe.BioDownloader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,13 +29,13 @@ public class AppStoreBuilder extends AbstractBuilder<AppStoreBuilder> {
     }
 
     @Override
-    public SyncDownloader build() {
+    public BioDownloader build() {
         return new AppStoreDownloader(config);
     }
 
     @Override
-    public AsyncDownloader buildAsync(ExecutorService executorService) {
-        Objects.requireNonNull(executorService, "Async operations require an executor service!");
+    public NioDownloader buildNio(ExecutorService executorService) {
+        Objects.requireNonNull(executorService, "Non-blocking operations require an executor service!");
         config.setExecutorService(executorService);
         return new AppStoreDownloader(config);
     }

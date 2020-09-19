@@ -8,8 +8,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-public interface SyncDownloader {
-
+/**
+ * Blocking API
+ */
+public interface BioDownloader {
     /**
      * Fetches icon urls for a single {@code appId} in a blocking way.
      */

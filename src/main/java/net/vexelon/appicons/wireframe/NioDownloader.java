@@ -7,8 +7,10 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Set;
 
-public interface AsyncDownloader {
-
+/**
+ * Non-blocking API
+ */
+public interface NioDownloader {
     /**
      * Fetches icon urls for a single {@code appId} in an asynchronous way.
      * <p>
@@ -35,6 +37,5 @@ public interface AsyncDownloader {
      * <p>
      * The {@code callback} will be invoked when the operation is completed.
      */
-    void getMultiFiles(Set<String> appIds, Path destination,
-                       DownloadCallback<IconFile> callback);
+    void getMultiFiles(Set<String> appIds, Path destination, DownloadCallback<IconFile> callback);
 }

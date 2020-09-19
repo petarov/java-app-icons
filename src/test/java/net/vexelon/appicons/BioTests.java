@@ -1,7 +1,7 @@
 package net.vexelon.appicons;
 
 import net.vexelon.appicons.utils.StringUtils;
-import net.vexelon.appicons.wireframe.SyncDownloader;
+import net.vexelon.appicons.wireframe.BioDownloader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,10 +9,10 @@ import org.junit.jupiter.api.Test;
 import java.nio.file.Path;
 import java.util.Set;
 
-public class SyncTests {
+public class BioTests {
 
-    private SyncDownloader appStore;
-    private SyncDownloader playStore;
+    private BioDownloader appStore;
+    private BioDownloader playStore;
 
     @BeforeEach
     void initBefore() {

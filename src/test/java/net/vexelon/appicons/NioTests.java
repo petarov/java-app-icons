@@ -1,7 +1,7 @@
 package net.vexelon.appicons;
 
 import net.vexelon.appicons.utils.StringUtils;
-import net.vexelon.appicons.wireframe.AsyncDownloader;
+import net.vexelon.appicons.wireframe.NioDownloader;
 import net.vexelon.appicons.wireframe.DownloadCallback;
 import net.vexelon.appicons.wireframe.entities.IconFile;
 import net.vexelon.appicons.wireframe.entities.IconURL;
@@ -15,13 +15,13 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-public class AsyncTests {
+public class NioTests {
 
     private static final int TIMEOUT = 10_000;
 
     private static ExecutorService executorService;
-    private AsyncDownloader appStore;
-    private AsyncDownloader playStore;
+    private NioDownloader appStore;
+    private NioDownloader playStore;
 
     @BeforeAll
     static void init() {
@@ -42,8 +42,8 @@ public class AsyncTests {
 
     @BeforeEach
     void initBefore() {
-        appStore = AppIcons.appstore().buildAsync(executorService);
-        playStore = AppIcons.playstore().buildAsync(executorService);
+        appStore = AppIcons.appstore().buildNio(executorService);
+        playStore = AppIcons.playstore().buildNio(executorService);
     }
 
     @Test
