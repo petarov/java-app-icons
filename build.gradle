@@ -1,9 +1,22 @@
+import java.text.SimpleDateFormat
+
 plugins {
     id 'java'
+    id 'maven-publish'
+    id "com.jfrog.bintray" version "1.8.5"
 }
 
 group 'net.vexelon'
 version '1.0'
+
+Date now = new Date()
+ext {
+    projectName = "Java App Icons"
+    projectDesc = "Fetch urls or download app icons for any App Store or Play Store app."
+    buildTimeStamp = new SimpleDateFormat('yyyy-MM-dd HH:mm:ss.SSSZ').format(now)
+}
+
+apply from: file('gradle/publish.gradle')
 
 repositories {
     mavenCentral()
@@ -16,4 +29,14 @@ dependencies {
 
 test {
     useJUnitPlatform()
+}
+
+jar {
+    manifest {
+        attributes(
+                'Implementation-Title': project.name,
+                'Implementation-Version': project.version,
+                'Implementation-LastModified': project.buildTimeStamp
+        )
+    }
 }

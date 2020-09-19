@@ -1,0 +1,63 @@
+apply plugin: 'maven-publish'
+
+task sourceJar(type: Jar) {
+    from sourceSets.main.allJava
+    archiveClassifier = "sources"
+}
+
+publishing {
+    publications {
+        mavenCustom(MavenPublication) {
+            from components.java
+            artifact sourceJar
+            pom {
+                name = projectName
+                description = projectDesc
+                url = "https://github.com/petarov/java-app-icons"
+
+                licenses {
+                    license {
+                        name = "The MIT License"
+                        url = "https://opensource.org/licenses/MIT"
+                        distribution = "repo"
+                    }
+                }
+                developers {
+                    developer {
+                        id = "petarov"
+                        name = "PPetrov"
+                        email = "ppetrov@vexelon.net"
+                    }
+                }
+                scm {
+                    url = "https://github.com/petarov/java-app-icons.git"
+                }
+            }
+        }
+    }
+}
+
+bintray {
+    user = project.property("bintray.user")
+    key = project.property("bintray.apikey")
+    publications = ['mavenCustom']
+
+    pkg {
+        repo = 'java-libs'
+        name = project.name
+        desc = projectDesc
+        licenses = ['MIT']
+        labels = ['java', 'appicon', 'playstore', 'appstore', 'mdm']
+        vcsUrl = 'https://github.com/petarov/java-app-icons.git'
+
+        version {
+            name = project.version
+            released = new Date()
+//            gpg {
+//                sign = true
+//            }
+        }
+    }
+
+    publish = true
+}
