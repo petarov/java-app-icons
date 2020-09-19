@@ -38,6 +38,14 @@ public class BioTests {
     }
 
     @Test
+    void test_getUrls_CustomSizes() {
+        Assertions.assertEquals(1,
+                AppIcons.appstore().size60(true).size100(false).size512(false).build().getUrls("389801252").size());
+        Assertions.assertEquals(3,
+                AppIcons.playstore().sizes(60, 100, 180).build().getUrls("com.instagram.android").size());
+    }
+
+    @Test
     void test_getFiles() {
         try {
             var path = TestUtils.getJavaAppIcons();

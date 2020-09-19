@@ -25,8 +25,8 @@ publishing {
                 developers {
                     developer {
                         id = "petarov"
-                        name = "PPetrov"
-                        email = "ppetrov@vexelon.net"
+                        name = project.property("my.name")
+                        email = project.property("my.email")
                     }
                 }
                 scm {
