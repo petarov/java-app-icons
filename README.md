@@ -13,7 +13,19 @@ Fetch urls or download app icons for any App Store or Play Store app.
 
 # Installation
 
-Get the latest stable version.
+Use Bintray's JCenter maven repository with Gradle.
+
+```groovy
+repositories {
+    jcenter()
+}
+
+dependencies {
+    implementation 'net.vexelon:java-app-icons:1.0' 
+}
+```
+
+Or get the latest stable version into your POM file. 
 
 ```xml
 <dependency>
@@ -22,14 +34,6 @@ Get the latest stable version.
   <version>1.0</version>
   <type>pom</type>
 </dependency>
-```
-
-Use Bintray's JCenter maven repository:
-
-```groovy
-repositories {
-    jcenter()
-}
 ```
 
 # Usage
