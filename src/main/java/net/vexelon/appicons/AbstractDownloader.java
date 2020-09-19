@@ -9,6 +9,7 @@ import net.vexelon.appicons.wireframe.SyncDownloader;
 import net.vexelon.appicons.wireframe.entities.IconFile;
 import net.vexelon.appicons.wireframe.entities.IconURL;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -55,6 +56,18 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
         }
     }
 
+    public static byte[] readInputStreamFully(InputStream input) throws IOException {
+        var buffer = new byte[4096];
+        int read;
+
+        try (var output = new ByteArrayOutputStream()) {
+            while ((read = input.read(buffer)) != -1) {
+                output.write(buffer, 0, read);
+            }
+            return output.toByteArray();
+        }
+    }
+
     private void toIconFiles(String appId, List<IconURL> iconUrls, Path destination, DownloadCallback<IconFile> callback) {
         iconUrls.forEach(iconURL -> {
             var type = iconURL.getType().toLowerCase();
@@ -68,15 +81,20 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
 
                 @Override
                 public void onSuccess(String innerAppId, InputStream inputStream) {
-                    try (var input = inputStream) {
+                    try {
                         var channel = AsynchronousFileChannel.open(
                                 copyToPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 
-                        channel.write(ByteBuffer.wrap(input.readAllBytes()), 0, channel, new CompletionHandler<>() {
+                        // readAllBytes() seems to fail in some cases, I was not able to full trace the reason!
+//                        var buf = ByteBuffer.wrap(inputStream.readAllBytes());
+                        var buf = ByteBuffer.wrap(readInputStreamFully(inputStream));
+
+                        channel.write(buf, 0, channel, new CompletionHandler<>() {
 
                             @Override
                             public void completed(Integer result, AsynchronousFileChannel attachment) {
                                 FileUtils.closeQuietly(attachment);
+                                FileUtils.closeQuietly(inputStream);
 
                                 var iconFile = new IconFile();
                                 iconFile.setPath(copyToPath.toString());
@@ -90,11 +108,13 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
                             @Override
                             public void failed(Throwable exc, AsynchronousFileChannel attachment) {
                                 FileUtils.closeQuietly(attachment);
+                                FileUtils.closeQuietly(inputStream);
+
                                 callback.onError(appId, exc);
                             }
                         });
-                    } catch (IOException e) {
-                        callback.onError(appId, e);
+                    } catch (Throwable t) {
+                        callback.onError(appId, new RuntimeException("Failed for url - " + iconURL.getUrl(), t));
                     }
                 }
             });
