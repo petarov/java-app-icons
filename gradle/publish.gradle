@@ -61,5 +61,6 @@ bintray {
         }
     }
 
+    override = true
     publish = true
 }
