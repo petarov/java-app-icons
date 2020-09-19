@@ -38,8 +38,10 @@ publishing {
 }
 
 bintray {
-    user = project.property("bintray.user")
-    key = project.property("bintray.apikey")
+    if (project.hasProperty('bintray.user')) {
+        user = project.property("bintray.user")
+        key = project.property("bintray.apikey")
+    }
     publications = ['mavenCustom']
 
     pkg {
@@ -53,9 +55,9 @@ bintray {
         version {
             name = project.version
             released = new Date()
-//            gpg {
-//                sign = true
-//            }
+            gpg {
+                sign = true
+            }
         }
     }
 
