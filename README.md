@@ -25,7 +25,7 @@ dependencies {
 }
 ```
 
-Or get the latest stable version into your POM file. 
+Or get the latest stable version into your POM file. See [SET ME UP](https://bintray.com/petarov/java-libs/java-app-icons) at JCenter.
 
 ```xml
 <dependency>
