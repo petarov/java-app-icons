@@ -1,6 +1,8 @@
 Java App Icons
 ===================
 
+[![](https://jitpack.io/v/petarov/java-app-icons.svg)](https://jitpack.io/#petarov/java-app-icons)
+
 ![App Store](https://www.apple.com/v/ios/app-store/d/images/overview/app_store_icon__fngcxe43zo2u_large.jpg)
 ![Google Play](https://www.gstatic.com/android/market_images/web/play_prism_hlock_2x.png)
 
@@ -13,9 +15,9 @@ Fetch urls or download app icons for any App Store or Play Store app.
 
 # Installation
 
-Use Bintray's JCenter maven repository with Gradle.
+Use with Gradle:
 
-```groovy
+```gradle
 repositories {
     jcenter()
 }
@@ -25,16 +27,24 @@ dependencies {
 }
 ```
 
-Or get the latest stable version into your POM file. See [SET ME UP](https://bintray.com/petarov/java-libs/java-app-icons) at JCenter.
+Use with Maven:
 
 ```xml
+<repositories>
+  <repository>
+      <id>jitpack.io</id>
+      <url>https://jitpack.io</url>
+  </repository>
+</repositories>
+
 <dependency>
-  <groupId>net.vexelon</groupId>
-  <artifactId>java-app-icons</artifactId>
-  <version>1.0</version>
-  <type>pom</type>
+    <groupId>com.github.petarov</groupId>
+    <artifactId>java-app-icons</artifactId>
+    <version>1.0</version>
 </dependency>
 ```
+
+For more info see the [JitPack](https://jitpack.io/#petarov/java-app-icons) or [JCenter](https://bintray.com/petarov/java-libs/java-app-icons) setup pages.
 
 # Usage
 
