@@ -1,8 +1,8 @@
 package net.vexelon.appicons;
 
 import net.vexelon.appicons.utils.StringUtils;
-import net.vexelon.appicons.wireframe.NioDownloader;
 import net.vexelon.appicons.wireframe.DownloadCallback;
+import net.vexelon.appicons.wireframe.NioDownloader;
 import net.vexelon.appicons.wireframe.entities.IconFile;
 import net.vexelon.appicons.wireframe.entities.IconURL;
 import org.junit.jupiter.api.Test;
@@ -111,7 +111,8 @@ public class NioTests {
 
                 @Override
                 public void onSuccess(String appId, IconFile iconFile) {
-                    Assertions.assertEquals(TestUtils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
+                    Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
+                            Path.of(iconFile.getPath()).getFileName().toString());
                     Assertions.assertEquals("png", iconFile.getExtension());
                     Assertions.assertEquals(512, iconFile.getWidth());
                     Assertions.assertEquals(512, iconFile.getHeight());
@@ -175,10 +176,17 @@ public class NioTests {
                 }
 
                 @Override public void onSuccess(String appId, IconFile iconFile) {
-                    Assertions.assertEquals(TestUtils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
                     Assertions.assertEquals("png", iconFile.getExtension());
-                    Assertions.assertTrue(iconFile.getWidth() > 0);
-                    Assertions.assertTrue(iconFile.getHeight() > 0);
+                    Assertions.assertEquals(512, iconFile.getWidth());
+                    Assertions.assertEquals(512, iconFile.getHeight());
+
+                    if (appId.equals("com.zhiliaoapp.musically")) {
+                        Assertions.assertEquals("bb204ac4cf29a789fbd3c189458264a471182436.png",
+                                Path.of(iconFile.getPath()).getFileName().toString());
+                    } else if (appId.equals("com.instagram.android")) {
+                        Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
+                                Path.of(iconFile.getPath()).getFileName().toString());
+                    }
                 }
             });
 

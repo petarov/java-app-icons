@@ -32,8 +32,8 @@ public class BioTests {
         playStore.getUrls("com.instagram.android").forEach(iconURL -> {
             Assertions.assertTrue(StringUtils.defaultString(iconURL.getUrl()).startsWith("https://"));
             Assertions.assertEquals("PNG", iconURL.getType());
-            Assertions.assertTrue(iconURL.getWidth() > 0);
-            Assertions.assertTrue(iconURL.getHeight() > 0);
+            Assertions.assertEquals(512, iconURL.getWidth());
+            Assertions.assertEquals(512, iconURL.getHeight());
         });
     }
 
@@ -58,10 +58,11 @@ public class BioTests {
             });
 
             playStore.getFiles("com.instagram.android", path).forEach(iconFile -> {
-                Assertions.assertEquals(TestUtils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
+                Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
+                        Path.of(iconFile.getPath()).getFileName().toString());
                 Assertions.assertEquals("png", iconFile.getExtension());
-                Assertions.assertTrue(iconFile.getWidth() > 0);
-                Assertions.assertTrue(iconFile.getHeight() > 0);
+                Assertions.assertEquals(512, iconFile.getWidth());
+                Assertions.assertEquals(512, iconFile.getHeight());
             });
         } catch (Throwable t) {
             Assertions.fail(t);
@@ -107,10 +108,14 @@ public class BioTests {
             var app3 = gResults.get("com.zhiliaoapp.musically");
             Assertions.assertNotNull(app3);
             Assertions.assertEquals(1, app3.size());
+            Assertions.assertEquals("bb204ac4cf29a789fbd3c189458264a471182436.png",
+                    Path.of(app3.get(0).getPath()).getFileName().toString());
 
             var app4 = gResults.get("com.instagram.android");
             Assertions.assertNotNull(app4);
             Assertions.assertEquals(1, app4.size());
+            Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
+                    Path.of(app4.get(0).getPath()).getFileName().toString());
         } catch (Throwable t) {
             Assertions.fail(t);
         }
