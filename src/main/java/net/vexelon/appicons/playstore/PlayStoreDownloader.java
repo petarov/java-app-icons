@@ -18,7 +18,8 @@ public class PlayStoreDownloader extends AbstractDownloader<PlayStoreBuilder.Pla
         return AppURLUtils.playstore(appId, config.getCountry(), config.getLanguage());
     }
 
-    @Override protected List<IconURL> parse(InputStream input) {
+    @Override
+    protected List<IconURL> parse(InputStream input) {
         return new PlayStoreParser(config).parse(input);
     }
 }

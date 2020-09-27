@@ -3,13 +3,12 @@ package net.vexelon.appicons;
 import net.vexelon.appicons.utils.FileUtils;
 import net.vexelon.appicons.utils.HashingUtils;
 import net.vexelon.appicons.utils.HttpFetcher;
-import net.vexelon.appicons.wireframe.NioDownloader;
-import net.vexelon.appicons.wireframe.DownloadCallback;
 import net.vexelon.appicons.wireframe.BioDownloader;
+import net.vexelon.appicons.wireframe.DownloadCallback;
+import net.vexelon.appicons.wireframe.NioDownloader;
 import net.vexelon.appicons.wireframe.entities.IconFile;
 import net.vexelon.appicons.wireframe.entities.IconURL;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.ByteBuffer;
@@ -56,18 +55,6 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
         }
     }
 
-    public static byte[] readInputStreamFully(InputStream input) throws IOException {
-        var buffer = new byte[4096];
-        int read;
-
-        try (var output = new ByteArrayOutputStream()) {
-            while ((read = input.read(buffer)) != -1) {
-                output.write(buffer, 0, read);
-            }
-            return output.toByteArray();
-        }
-    }
-
     private void toIconFiles(String appId, List<IconURL> iconUrls, Path destination, DownloadCallback<IconFile> callback) {
         iconUrls.forEach(iconURL -> {
             var type = iconURL.getType().toLowerCase();
@@ -85,9 +72,9 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
                         var channel = AsynchronousFileChannel.open(
                                 copyToPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 
-                        // readAllBytes() seems to fail in some cases, I was not able to full trace the reason!
+                        // readAllBytes() seems to fail in some cases. I was not able to fully trace why.
 //                        var buf = ByteBuffer.wrap(inputStream.readAllBytes());
-                        var buf = ByteBuffer.wrap(readInputStreamFully(inputStream));
+                        var buf = ByteBuffer.wrap(FileUtils.readInputStreamFully(inputStream));
 
                         channel.write(buf, 0, channel, new CompletionHandler<>() {
 
