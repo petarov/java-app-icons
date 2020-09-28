@@ -64,6 +64,22 @@ public class BioTests {
                 Assertions.assertEquals(512, iconFile.getWidth());
                 Assertions.assertEquals(512, iconFile.getHeight());
             });
+
+            playStore.getFiles("com.whatsapp", path).forEach(iconFile -> {
+                Assertions.assertEquals("829654a23e3e1a0ce263e1ded88147c4d12ef99a.png",
+                        Path.of(iconFile.getPath()).getFileName().toString());
+                Assertions.assertEquals("png", iconFile.getExtension());
+                Assertions.assertEquals(512, iconFile.getWidth());
+                Assertions.assertEquals(512, iconFile.getHeight());
+            });
+
+            playStore.getFiles("com.snapchat.android", path).forEach(iconFile -> {
+                Assertions.assertEquals("3c26c13a6511eef9b2b7f6e0dcb79e39f295e40d.png",
+                        Path.of(iconFile.getPath()).getFileName().toString());
+                Assertions.assertEquals("png", iconFile.getExtension());
+                Assertions.assertEquals(512, iconFile.getWidth());
+                Assertions.assertEquals(512, iconFile.getHeight());
+            });
         } catch (Throwable t) {
             Assertions.fail(t);
         }
@@ -104,7 +120,8 @@ public class BioTests {
             Assertions.assertNotNull(app2);
             Assertions.assertEquals(3, app2.size());
 
-            var gResults = playStore.getMultiFiles(Set.of("com.zhiliaoapp.musically", "com.instagram.android"), path);
+            var gResults = playStore.getMultiFiles(
+                    Set.of("com.zhiliaoapp.musically", "com.instagram.android", "com.whatsapp"), path);
             var app3 = gResults.get("com.zhiliaoapp.musically");
             Assertions.assertNotNull(app3);
             Assertions.assertEquals(1, app3.size());
@@ -116,6 +133,12 @@ public class BioTests {
             Assertions.assertEquals(1, app4.size());
             Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
                     Path.of(app4.get(0).getPath()).getFileName().toString());
+
+            var app5 = gResults.get("com.whatsapp");
+            Assertions.assertNotNull(app5);
+            Assertions.assertEquals(1, app5.size());
+            Assertions.assertEquals("829654a23e3e1a0ce263e1ded88147c4d12ef99a.png",
+                    Path.of(app5.get(0).getPath()).getFileName().toString());
         } catch (Throwable t) {
             Assertions.fail(t);
         }

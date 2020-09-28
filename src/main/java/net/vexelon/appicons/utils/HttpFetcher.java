@@ -35,7 +35,7 @@ public final class HttpFetcher {
 
     private <T> HttpResponse<T> verifyOk(HttpResponse<T> response) {
         if (!isOk(response)) {
-            throw new RuntimeException(String.format("HTTP error (%d) downloading %s!", response.statusCode(),
+            throw new RuntimeException(String.format("HTTP error (%d) downloading %s", response.statusCode(),
                     response.request().uri().toString()));
         }
         return response;
