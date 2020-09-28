@@ -13,6 +13,8 @@ public class UtilsTests {
                 HashingUtils.sha1("https://is4-ssl.mzstatic.com/image/thumb/Purple124/v4/ae/5e/26/ae5e268c-44d3-471c-f751-546b7db58980/source/512x512bb.jpg"));
         Assertions.assertEquals("d8676f92e49e73ee6c8ebdbc72e96234faf13271",
                 HashingUtils.sha1("https://lh3.googleusercontent.com/2sREY-8UpjmaLDCTztldQf6u2RGUtuyf6VT5iyX3z53JS4TdvfQlX-rNChXKgpBYMw=s360-rw"));
+        Assertions.assertEquals("45563c8d6cbc811007b137bfbefbee5a9d30d2ea",
+                Utils.sha1Res("3c26c13a6511eef9b2b7f6e0dcb79e39f295e40d.png"));
     }
 
     @Test

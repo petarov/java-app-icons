@@ -86,7 +86,7 @@ public class NioTests {
     @Test
     void test_getFiles() {
         try {
-            var path = TestUtils.getJavaAppIcons();
+            var path = Utils.getJavaAppIcons();
 
             appStore.getFiles("389801252", path, new DownloadCallback<>() {
                 @Override
@@ -96,7 +96,7 @@ public class NioTests {
 
                 @Override
                 public void onSuccess(String appId, IconFile iconFile) {
-                    Assertions.assertEquals(TestUtils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
+                    Assertions.assertEquals(Utils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
                     Assertions.assertEquals("jpg", iconFile.getExtension());
                     Assertions.assertTrue(iconFile.getWidth() > 0);
                     Assertions.assertTrue(iconFile.getHeight() > 0);
@@ -155,7 +155,7 @@ public class NioTests {
     @Test
     void test_getMultiFiles() {
         try {
-            var path = TestUtils.getJavaAppIcons();
+            var path = Utils.getJavaAppIcons();
 
             appStore.getMultiFiles(Set.of("389801252", "310633997"), path, new DownloadCallback<>() {
                 @Override public void onError(String appId, Throwable t) {
@@ -163,7 +163,7 @@ public class NioTests {
                 }
 
                 @Override public void onSuccess(String appId, IconFile iconFile) {
-                    Assertions.assertEquals(TestUtils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
+                    Assertions.assertEquals(Utils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
                     Assertions.assertEquals("jpg", iconFile.getExtension());
                     Assertions.assertTrue(iconFile.getWidth() > 0);
                     Assertions.assertTrue(iconFile.getHeight() > 0);

@@ -48,10 +48,10 @@ public class BioTests {
     @Test
     void test_getFiles() {
         try {
-            var path = TestUtils.getJavaAppIcons();
+            var path = Utils.getJavaAppIcons();
 
             appStore.getFiles("389801252", path).forEach(iconFile -> {
-                Assertions.assertEquals(TestUtils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
+                Assertions.assertEquals(Utils.FILENAME_LEN, Path.of(iconFile.getPath()).getFileName().toString().length());
                 Assertions.assertEquals("jpg", iconFile.getExtension());
                 Assertions.assertTrue(iconFile.getWidth() > 0);
                 Assertions.assertTrue(iconFile.getHeight() > 0);
@@ -109,7 +109,7 @@ public class BioTests {
     @Test
     void test_getMultiFiles() {
         try {
-            var path = TestUtils.getJavaAppIcons();
+            var path = Utils.getJavaAppIcons();
 
             var aResults = appStore.getMultiFiles(Set.of("389801252", "310633997"), path);
             var app1 = aResults.get("389801252");
