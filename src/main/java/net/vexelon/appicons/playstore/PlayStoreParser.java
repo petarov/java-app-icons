@@ -42,14 +42,15 @@ public class PlayStoreParser implements IconParser {
                 // Find the first image itemprop, because for what it seems, this is the app logo image.
                 int needle = line.indexOf("itemprop=\"image\"");
                 if (needle > 0) {
-                    // Search for the start of the image some 350 chars before the needle. This number is somewhat
-                    // arbitrary and may need adjustment!
-                    int beginning = line.indexOf("<img src=", needle - 350);
+                    // Search for the start of the image
+                    int beginning = line.lastIndexOf("<img", needle);
                     if (beginning > 0) {
+                        // Search for src attribute independently of img element
+                        int srcAttr = line.indexOf("src=", beginning);
                         // find the last quote character surrounding the image url
-                        int end = line.indexOf("\"", beginning + 10);
+                        int end = line.indexOf("\"", srcAttr + 5);
                         // start from the first quote that contains the image url till the last quote found
-                        line = line.substring(beginning + 10, end).strip();
+                        line = line.substring(srcAttr + 5, end).strip();
 
                         String url;
 
