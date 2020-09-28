@@ -25,7 +25,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'net.vexelon:java-app-icons:1.0' 
+    implementation 'net.vexelon:java-app-icons:1.1'
 }
 ```
 
@@ -42,7 +42,7 @@ Use with Maven:
 <dependency>
     <groupId>com.github.petarov</groupId>
     <artifactId>java-app-icons</artifactId>
-    <version>1.0</version>
+    <version>1.1</version>
 </dependency>
 ```
 

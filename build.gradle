@@ -7,7 +7,7 @@ plugins {
 }
 
 group 'net.vexelon'
-version '1.0'
+version '1.1'
 
 Date now = new Date()
 ext {
