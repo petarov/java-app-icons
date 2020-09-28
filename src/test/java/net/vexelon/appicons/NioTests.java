@@ -1,5 +1,6 @@
 package net.vexelon.appicons;
 
+import net.vexelon.appicons.utils.HashingUtils;
 import net.vexelon.appicons.utils.StringUtils;
 import net.vexelon.appicons.wireframe.DownloadCallback;
 import net.vexelon.appicons.wireframe.NioDownloader;
@@ -111,11 +112,11 @@ public class NioTests {
 
                 @Override
                 public void onSuccess(String appId, IconFile iconFile) {
-                    Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
-                            Path.of(iconFile.getPath()).getFileName().toString());
                     Assertions.assertEquals("png", iconFile.getExtension());
                     Assertions.assertEquals(512, iconFile.getWidth());
                     Assertions.assertEquals(512, iconFile.getHeight());
+                    Assertions.assertEquals("b8f46faeb5e8075c96b2dafa060226597a475e85",
+                            HashingUtils.sha1(Path.of(iconFile.getPath())));
                 }
             });
 
@@ -181,11 +182,11 @@ public class NioTests {
                     Assertions.assertEquals(512, iconFile.getHeight());
 
                     if (appId.equals("com.zhiliaoapp.musically")) {
-                        Assertions.assertEquals("bb204ac4cf29a789fbd3c189458264a471182436.png",
-                                Path.of(iconFile.getPath()).getFileName().toString());
+                        Assertions.assertEquals("ed3cdd5e60914796143165300e2b30d65458d7ed",
+                                HashingUtils.sha1(Path.of(iconFile.getPath())));
                     } else if (appId.equals("com.instagram.android")) {
-                        Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
-                                Path.of(iconFile.getPath()).getFileName().toString());
+                        Assertions.assertEquals("b8f46faeb5e8075c96b2dafa060226597a475e85",
+                                HashingUtils.sha1(Path.of(iconFile.getPath())));
                     }
                 }
             });

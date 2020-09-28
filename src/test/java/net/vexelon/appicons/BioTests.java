@@ -1,5 +1,6 @@
 package net.vexelon.appicons;
 
+import net.vexelon.appicons.utils.HashingUtils;
 import net.vexelon.appicons.utils.StringUtils;
 import net.vexelon.appicons.wireframe.BioDownloader;
 import org.junit.jupiter.api.Assertions;
@@ -58,27 +59,27 @@ public class BioTests {
             });
 
             playStore.getFiles("com.instagram.android", path).forEach(iconFile -> {
-                Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
-                        Path.of(iconFile.getPath()).getFileName().toString());
                 Assertions.assertEquals("png", iconFile.getExtension());
                 Assertions.assertEquals(512, iconFile.getWidth());
                 Assertions.assertEquals(512, iconFile.getHeight());
+                Assertions.assertEquals("b8f46faeb5e8075c96b2dafa060226597a475e85",
+                        HashingUtils.sha1(Path.of(iconFile.getPath())));
             });
 
             playStore.getFiles("com.whatsapp", path).forEach(iconFile -> {
-                Assertions.assertEquals("829654a23e3e1a0ce263e1ded88147c4d12ef99a.png",
-                        Path.of(iconFile.getPath()).getFileName().toString());
                 Assertions.assertEquals("png", iconFile.getExtension());
                 Assertions.assertEquals(512, iconFile.getWidth());
                 Assertions.assertEquals(512, iconFile.getHeight());
+                Assertions.assertEquals("9e44265bacd9c417671e4f17bb86020aaec67aef",
+                        HashingUtils.sha1(Path.of(iconFile.getPath())));
             });
 
             playStore.getFiles("com.snapchat.android", path).forEach(iconFile -> {
-                Assertions.assertEquals("3c26c13a6511eef9b2b7f6e0dcb79e39f295e40d.png",
-                        Path.of(iconFile.getPath()).getFileName().toString());
                 Assertions.assertEquals("png", iconFile.getExtension());
                 Assertions.assertEquals(512, iconFile.getWidth());
                 Assertions.assertEquals(512, iconFile.getHeight());
+                Assertions.assertEquals("45563c8d6cbc811007b137bfbefbee5a9d30d2ea",
+                        HashingUtils.sha1(Path.of(iconFile.getPath())));
             });
         } catch (Throwable t) {
             Assertions.fail(t);
@@ -125,20 +126,20 @@ public class BioTests {
             var app3 = gResults.get("com.zhiliaoapp.musically");
             Assertions.assertNotNull(app3);
             Assertions.assertEquals(1, app3.size());
-            Assertions.assertEquals("bb204ac4cf29a789fbd3c189458264a471182436.png",
-                    Path.of(app3.get(0).getPath()).getFileName().toString());
+            Assertions.assertEquals("ed3cdd5e60914796143165300e2b30d65458d7ed",
+                    HashingUtils.sha1(Path.of(app3.get(0).getPath())));
 
             var app4 = gResults.get("com.instagram.android");
             Assertions.assertNotNull(app4);
             Assertions.assertEquals(1, app4.size());
-            Assertions.assertEquals("f8262c1e0b4944f5ee364463b331edc2c4e3a92e.png",
-                    Path.of(app4.get(0).getPath()).getFileName().toString());
+            Assertions.assertEquals("b8f46faeb5e8075c96b2dafa060226597a475e85",
+                    HashingUtils.sha1(Path.of(app4.get(0).getPath())));
 
             var app5 = gResults.get("com.whatsapp");
             Assertions.assertNotNull(app5);
             Assertions.assertEquals(1, app5.size());
-            Assertions.assertEquals("829654a23e3e1a0ce263e1ded88147c4d12ef99a.png",
-                    Path.of(app5.get(0).getPath()).getFileName().toString());
+            Assertions.assertEquals("9e44265bacd9c417671e4f17bb86020aaec67aef",
+                    HashingUtils.sha1(Path.of(app5.get(0).getPath())));
         } catch (Throwable t) {
             Assertions.fail(t);
         }
