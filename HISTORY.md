@@ -3,7 +3,7 @@ Java App Icons Changes
 
 ## 1.1
 
-  * Improved Playstore parser. (@ptdud)
+  * Improved Playstore parser. ([@ptdud](https://github.com/ptdud))
   * Added more tests.
 
 ## 1.0
