@@ -8,7 +8,7 @@ import java.util.concurrent.ExecutorService;
 
 public class BuilderConfig {
 
-    public static final String DEFAULT_USER_AGENT = "java-app-icons/1.1";
+    public static final String DEFAULT_USER_AGENT = "java-app-icons/1.2";
 
     public enum ProxyType {
         /**
