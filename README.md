@@ -16,7 +16,7 @@ Fetch urls or download app icons for any App Store or Play Store app.
   - Supports non-blocking downloads
   
   
-Check [java-app-icons-bin](https://github.com/petarov/java-app-icons-bin) for a cli executable.
+See [java-app-icons-bin](https://github.com/petarov/java-app-icons-bin) for an executable CLI.
 
 # Installation
 
