@@ -1,5 +1,9 @@
 package net.vexelon.appicons;
 
+import net.vexelon.appicons.utils.HashingUtils;
+import net.vexelon.appicons.wireframe.NamingStrategyResolver;
+import net.vexelon.appicons.wireframe.entities.IconURL;
+
 import java.util.concurrent.ExecutorService;
 
 public class BuilderConfig {
@@ -7,8 +11,35 @@ public class BuilderConfig {
     public static final String DEFAULT_USER_AGENT = "java-app-icons/1.1";
 
     public enum ProxyType {
+        /**
+         * No proxy
+         */
         NONE,
+        /**
+         * HTTP/S proxy selection
+         */
         HTTP
+    }
+
+    public enum NamingStrategy implements NamingStrategyResolver {
+        /**
+         * Icon file name is a SHA-1 values of the icon url.
+         */
+        SHA1 {
+            @Override
+            public String resolve(String appId, IconURL iconURL) {
+                return HashingUtils.sha1(iconURL.getUrl()) + "." + iconURL.getType().toLowerCase();
+            }
+        },
+        /**
+         * Icon file name is composed of the app/bundle id plus the size dimension of the icon.
+         */
+        APPID_AND_SIZE {
+            @Override
+            public String resolve(String appId, IconURL iconURL) {
+                return appId + "-" + iconURL.getWidth() + "x." + iconURL.getType().toLowerCase();
+            }
+        }
     }
 
     private long timeout = -1;
@@ -22,6 +53,7 @@ public class BuilderConfig {
     private String proxyUser = "";
     private String proxyPassword = "";
     private boolean isSkipSSLVerify = false;
+    private NamingStrategyResolver namingStrategyResolver = NamingStrategy.SHA1;
 
     public long getTimeout() {
         return timeout;
@@ -109,5 +141,13 @@ public class BuilderConfig {
 
     public void setSkipSSLVerify(boolean skipSSLVerify) {
         isSkipSSLVerify = skipSSLVerify;
+    }
+
+    public NamingStrategyResolver getNamingStrategyResolver() {
+        return namingStrategyResolver;
+    }
+
+    public void setNamingStrategyResolver(NamingStrategyResolver namingStrategyResolver) {
+        this.namingStrategyResolver = namingStrategyResolver;
     }
 }

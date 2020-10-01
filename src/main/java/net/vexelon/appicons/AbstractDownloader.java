@@ -1,7 +1,6 @@
 package net.vexelon.appicons;
 
 import net.vexelon.appicons.utils.FileUtils;
-import net.vexelon.appicons.utils.HashingUtils;
 import net.vexelon.appicons.utils.HttpFetcher;
 import net.vexelon.appicons.wireframe.BioDownloader;
 import net.vexelon.appicons.wireframe.DownloadCallback;
@@ -38,15 +37,14 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
 
     protected abstract List<IconURL> parse(InputStream input);
 
-    private IconFile toIconFile(IconURL iconURL, Path destination) {
+    private IconFile toIconFile(String appId, IconURL iconURL, Path destination) {
         try (var input = fetcher.getBlocking(iconURL.getUrl())) {
-            var type = iconURL.getType().toLowerCase();
-            var copyToPath = destination.resolve(HashingUtils.sha1(iconURL.getUrl()) + "." + type);
+            var copyToPath = destination.resolve(config.getNamingStrategyResolver().resolve(appId, iconURL));
             Files.copy(input, copyToPath, StandardCopyOption.REPLACE_EXISTING);
 
             var iconFile = new IconFile();
             iconFile.setPath(copyToPath.toString());
-            iconFile.setExtension(type);
+            iconFile.setExtension(iconURL.getType().toLowerCase());
             iconFile.setWidth(iconURL.getWidth());
             iconFile.setHeight(iconURL.getHeight());
             return iconFile;
@@ -57,8 +55,8 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
 
     private void toIconFiles(String appId, List<IconURL> iconUrls, Path destination, DownloadCallback<IconFile> callback) {
         iconUrls.forEach(iconURL -> {
-            var type = iconURL.getType().toLowerCase();
-            var copyToPath = destination.resolve(HashingUtils.sha1(iconURL.getUrl()) + "." + type);
+            final var copyToPath = destination.resolve(config.getNamingStrategyResolver().resolve(
+                    appId, iconURL));
 
             fetcher.getNonBlocking(iconURL.getUrl(), new DownloadCallback<>() {
                 @Override
@@ -72,7 +70,7 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
                         var channel = AsynchronousFileChannel.open(
                                 copyToPath, StandardOpenOption.WRITE, StandardOpenOption.CREATE);
 
-                        // readAllBytes() seems to fail in some cases. I was not able to fully trace why.
+                        // XXX: readAllBytes() seems to fail in some cases. I was not able to find out why exactly.
 //                        var buf = ByteBuffer.wrap(inputStream.readAllBytes());
                         var buf = ByteBuffer.wrap(FileUtils.readInputStreamFully(inputStream));
 
@@ -85,7 +83,7 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
 
                                 var iconFile = new IconFile();
                                 iconFile.setPath(copyToPath.toString());
-                                iconFile.setExtension(type);
+                                iconFile.setExtension(iconURL.getType().toLowerCase());
                                 iconFile.setWidth(iconURL.getWidth());
                                 iconFile.setHeight(iconURL.getHeight());
 
@@ -115,7 +113,7 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
 
     @Override
     public List<IconFile> getFiles(String appId, Path destination) {
-        return getUrls(appId).stream().map(icon -> toIconFile(icon, destination)).collect(Collectors.toList());
+        return getUrls(appId).stream().map(icon -> toIconFile(appId, icon, destination)).collect(Collectors.toList());
     }
 
     @Override
@@ -130,7 +128,7 @@ public abstract class AbstractDownloader<CONFIG extends BuilderConfig> implement
         return getMultiUrls(appIds).entrySet().stream().collect(Collectors.toMap(
                 Map.Entry::getKey,
                 entry -> entry.getValue().stream().map(iconURL ->
-                        toIconFile(iconURL, destination)).collect(Collectors.toList())
+                        toIconFile(entry.getKey(), iconURL, destination)).collect(Collectors.toList())
         ));
     }
 

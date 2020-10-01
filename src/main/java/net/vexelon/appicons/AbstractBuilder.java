@@ -1,5 +1,6 @@
 package net.vexelon.appicons;
 
+import net.vexelon.appicons.wireframe.NamingStrategyResolver;
 import net.vexelon.appicons.wireframe.NioDownloader;
 import net.vexelon.appicons.wireframe.BioDownloader;
 
@@ -47,6 +48,16 @@ public abstract class AbstractBuilder<BUILDER extends AbstractBuilder<BUILDER>> 
 
     public BUILDER skipSSLVerify(boolean skipSSLVerify) {
         config().setSkipSSLVerify(skipSSLVerify);
+        return self();
+    }
+
+    public BUILDER namingStrategy(BuilderConfig.NamingStrategy namingStrategy) {
+        config().setNamingStrategyResolver(namingStrategy);
+        return self();
+    }
+
+    public BUILDER namingStrategy(NamingStrategyResolver namingStrategyResolver) {
+        config().setNamingStrategyResolver(namingStrategyResolver);
         return self();
     }
 

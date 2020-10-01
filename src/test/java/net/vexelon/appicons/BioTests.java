@@ -58,6 +58,15 @@ public class BioTests {
                 Assertions.assertTrue(iconFile.getHeight() > 0);
             });
 
+            AppIcons.appstore().namingStrategy(BuilderConfig.NamingStrategy.APPID_AND_SIZE).size100(false).size512(false)
+                    .build().getFiles("389801252", path).forEach(iconFile -> {
+                Assertions.assertEquals("jpg", iconFile.getExtension());
+                Assertions.assertEquals(60, iconFile.getWidth());
+                Assertions.assertEquals(60, iconFile.getHeight());
+                Assertions.assertEquals("389801252-60x.jpg",
+                        Path.of(iconFile.getPath()).getFileName().toString());
+            });
+
             playStore.getFiles("com.instagram.android", path).forEach(iconFile -> {
                 Assertions.assertEquals("png", iconFile.getExtension());
                 Assertions.assertEquals(512, iconFile.getWidth());
@@ -66,19 +75,20 @@ public class BioTests {
                         HashingUtils.sha1(Path.of(iconFile.getPath())));
             });
 
+            AppIcons.playstore().namingStrategy(BuilderConfig.NamingStrategy.APPID_AND_SIZE).build()
+                    .getFiles("com.instagram.android", path).forEach(iconFile -> {
+                Assertions.assertEquals("png", iconFile.getExtension());
+                Assertions.assertEquals(512, iconFile.getWidth());
+                Assertions.assertEquals(512, iconFile.getHeight());
+                Assertions.assertEquals("com.instagram.android-512x.png",
+                        Path.of(iconFile.getPath()).getFileName().toString());
+            });
+
             playStore.getFiles("com.whatsapp", path).forEach(iconFile -> {
                 Assertions.assertEquals("png", iconFile.getExtension());
                 Assertions.assertEquals(512, iconFile.getWidth());
                 Assertions.assertEquals(512, iconFile.getHeight());
                 Assertions.assertEquals("9e44265bacd9c417671e4f17bb86020aaec67aef",
-                        HashingUtils.sha1(Path.of(iconFile.getPath())));
-            });
-
-            playStore.getFiles("com.snapchat.android", path).forEach(iconFile -> {
-                Assertions.assertEquals("png", iconFile.getExtension());
-                Assertions.assertEquals(512, iconFile.getWidth());
-                Assertions.assertEquals(512, iconFile.getHeight());
-                Assertions.assertEquals("45563c8d6cbc811007b137bfbefbee5a9d30d2ea",
                         HashingUtils.sha1(Path.of(iconFile.getPath())));
             });
         } catch (Throwable t) {

@@ -113,8 +113,8 @@ var downloader = AppIcons.playstore()
 ## Download and Save on Disk
 
 There are use cases where one may wish to save the app icons directly to a path on disk. This can be easily done by using
-the `getFiles()` API method where the `path` parameter specifies a folder path. Each icon file name is a `SHA-1` value of 
-the corresponding url fetched. 
+the `getFiles()` API method where the `path` parameter specifies a folder path. By default, each icon file name is a 
+`SHA-1` value of the corresponding url fetched.
 
 ```java
 
@@ -134,6 +134,28 @@ Multiple apps can be specified by using the `getMultiFiles()` API call.
 ```java
 
 downloader.getMultiFiles(Set.of("com.instagram.android", "com.zhiliaoapp.musically"), path).forEach(iconUrl -> { ... });
+
+```
+
+The naming of the files can be specified using `namingStrategy` in the builder. Instead of using `SHA-1` values, this
+strategy will use a concatenation of the app id and icon image size.
+
+```java
+
+AppIcons.playstore().namingStrategy(BuilderConfig.NamingStrategy.APPID_AND_SIZE).build();
+// com.instagram.android-512x.png
+AppIcons.appstore().namingStrategy(BuilderConfig.NamingStrategy.APPID_AND_SIZE).build();
+// 389801252-512x.jpg
+
+```
+
+Using a custom naming strategy is also possible.
+
+```java
+
+AppIcons.appstore().namingStrategy(((appId, iconURL) -> {
+  return appId + "." + iconURL.getType().toLowerCase();
+})).build();
 
 ```
 
