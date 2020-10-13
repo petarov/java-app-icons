@@ -3,6 +3,7 @@ Java App Icons
 
 [![JitPack](https://jitpack.io/v/petarov/java-app-icons.svg)](https://jitpack.io/#petarov/java-app-icons)
 [![BinTray](https://api.bintray.com/packages/petarov/java-libs/java-app-icons/images/download.svg) ](https://bintray.com/petarov/java-libs/java-app-icons/_latestVersion)
+![build](https://github.com/petarov/java-app-icons/workflows/CI%20(Ubuntu%20x86_64,%20AdoptOpenJDK%2011/Latest)/badge.svg)
 
 ![App Store](https://www.apple.com/v/ios/app-store/d/images/overview/app_store_icon__fngcxe43zo2u_large.jpg)
 ![Google Play](https://www.gstatic.com/android/market_images/web/play_prism_hlock_2x.png)
