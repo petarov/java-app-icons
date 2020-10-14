@@ -2,6 +2,7 @@ package net.vexelon.appicons;
 
 import net.vexelon.appicons.utils.AppURLUtils;
 import net.vexelon.appicons.utils.HashingUtils;
+import net.vexelon.appicons.utils.StringUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -40,5 +41,16 @@ public class UtilsTests {
                 AppURLUtils.appstore("389801252", "bg", ""));
         Assertions.assertEquals("https://itunes.apple.com/lookup?id=389801252&country=bg&lang=bg",
                 AppURLUtils.appstore("389801252", "bg", "bg"));
+    }
+
+    @Test
+    void testCharsSearch() {
+        Assertions.assertTrue(StringUtils.indexOf(new char[]{'a', 'b', 'c'}, new char[]{'b', 'c'}) != -1);
+        Assertions.assertTrue(StringUtils.indexOf(new char[]{'1', '2', '3', '4', '5'}, new char[]{'2', '3', '4'}) != -1);
+        Assertions.assertTrue(StringUtils.indexOf(new char[]{'1', '2', '3', '4', '5'}, new char[]{'2', '3', '5'}) == -1);
+        Assertions.assertTrue(StringUtils.indexOf(new char[]{'1', '2', '3', '4', '5'}, new char[]{'1', '2', '3', '4'}) != -1);
+        Assertions.assertTrue(StringUtils.indexOf(new char[]{'1', '2', '3', '4', '5'}, new char[]{'1', '2', '3', '4', '5'}) != -1);
+        Assertions.assertTrue(StringUtils.indexOf(new char[]{'1', '2', '3', '4', '5'}, new char[]{'5'}) != -1);
+        Assertions.assertTrue(StringUtils.indexOf(new char[]{'1', '2', '3', '4', '5'}, new char[]{'6'}) == -1);
     }
 }
