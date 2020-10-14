@@ -1,4 +1,4 @@
-name: CI (Ubuntu x86_64, AdoptOpenJDK 11/Latest)
+name: CI Build
 
 on: [ push, pull_request_target ]
 
