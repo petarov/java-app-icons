@@ -1,12 +1,12 @@
 package net.vexelon.appicons.playstore;
 
-import net.vexelon.appicons.wireframe.entities.IconURL;
+import net.vexelon.appicons.utils.StringUtils;
 import net.vexelon.appicons.wireframe.IconParser;
+import net.vexelon.appicons.wireframe.entities.IconURL;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.nio.CharBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,37 +28,42 @@ public class PlayStoreParser implements IconParser {
         var icons = new ArrayList<IconURL>();
 
         try (var reader = new BufferedReader(new InputStreamReader(input, StandardCharsets.UTF_8))) {
-            var buf = CharBuffer.allocate(4096);
+            final int BACKBUFFER_SIZE = 1024;
+            final char[] ITEM_PROP = "itemprop=\"image\"".toCharArray();
 
-            // Using a char buffer instead of .readLine(), saves about 10K of reads
-            while (reader.read(buf) > 0) {
-                buf.flip();
-                String line = buf.toString();
+            var backBuffer = new StringBuilder(BACKBUFFER_SIZE);
+            var snapshot = new char[4096];
+            int charsRead;
 
+            // Using a char buffer instead of .readLine() saves about 10K of reads
+            while ((charsRead = reader.read(snapshot)) > 0) {
                 if (logger.isLoggable(Level.FINEST)) {
-                    logger.log(Level.FINEST, "Line={0}", line);
+                    logger.log(Level.FINEST, "Line={0}", new String(snapshot));
                 }
 
                 // Find the first image itemprop, because for what it seems, this is the app logo image.
-                int needle = line.indexOf("itemprop=\"image\"");
+                int needle = StringUtils.indexOf(snapshot, ITEM_PROP);
                 if (needle > 0) {
-                    // Search for the start of the image
-                    int beginning = line.lastIndexOf("<img", needle);
+                    // append the fresh snapshot onto the previously read BACKBUFFER_SIZE chars back buffer
+                    backBuffer.append(snapshot);
+
+                    // Search for the first image in the back buffer
+                    int beginning = backBuffer.indexOf("<img");
                     if (beginning > 0) {
                         // Search for src attribute independently of img element
-                        int srcAttr = line.indexOf("src=", beginning);
+                        int srcAttr = backBuffer.indexOf("src=", beginning);
                         // find the last quote character surrounding the image url
-                        int end = line.indexOf("\"", srcAttr + 5);
+                        int end = backBuffer.indexOf("\"", srcAttr + 5);
                         // start from the first quote that contains the image url till the last quote found
-                        line = line.substring(srcAttr + 5, end).strip();
+                        String found = backBuffer.substring(srcAttr + 5, end).strip();
 
                         String url;
 
-                        var sizes = line.split("=s");
+                        var sizes = found.split("=s");
                         if (sizes.length > 1) {
                             url = sizes[0];
                         } else {
-                            url = line;
+                            url = found;
                         }
 
                         if (config.getSizes().isEmpty()) {
@@ -84,7 +89,9 @@ public class PlayStoreParser implements IconParser {
                     }
                 }
 
-                buf.clear();
+                // we only wanna "remember" the last BACKBUFFER_SIZE chars
+                backBuffer.setLength(0);
+                backBuffer.append(snapshot, Math.max(0, charsRead - BACKBUFFER_SIZE), Math.min(charsRead, BACKBUFFER_SIZE));
             }
 
             return icons;
