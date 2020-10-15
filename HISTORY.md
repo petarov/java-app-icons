@@ -1,6 +1,10 @@
 Java App Icons Changes
 ======================
 
+## 1.3
+
+   * Fix problem withs Playstore icons parsing.  
+
 ## 1.2
 
   * Add naming strategy option for saving icon files to disk.
