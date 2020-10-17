@@ -1,7 +1,7 @@
 Java App Icons
 ===================
 
-![build](https://github.com/petarov/java-app-icons/workflows/CI%20Build/badge.svg)
+[![CircleCI](https://circleci.com/gh/petarov/java-app-icons.svg?style=svg)](https://circleci.com/gh/petarov/java-app-icons)
 [![JitPack](https://jitpack.io/v/petarov/java-app-icons.svg)](https://jitpack.io/#petarov/java-app-icons)
 [![BinTray](https://api.bintray.com/packages/petarov/java-libs/java-app-icons/images/download.svg) ](https://bintray.com/petarov/java-libs/java-app-icons/_latestVersion)
 
