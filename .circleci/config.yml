@@ -1,0 +1,58 @@
+version: 2
+jobs:
+  build:
+    parallelism: 2
+
+    docker:
+      - image: circleci/openjdk:11.0.3-jdk-stretch
+
+    working_directory: ~/repo
+
+    environment:
+      JVM_OPTS: -Xmx2g
+      GRADLE_OPTS: "-Dorg.gradle.daemon=false -Dorg.gradle.workers.max=2"
+      TERM: dumb
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "build.gradle" }}
+            # fallback to using the latest cache if no exact match is found
+            - v1-dependencies-
+
+      - run:
+          name: enumerate deps
+          command: ./gradlew dependencies
+
+      - save_cache:
+          paths:
+            - ~/.gradle
+          key: v1-dependencies-{{ checksum "build.gradle" }}
+
+      - run:
+          name: run tests
+          command: ./gradlew test
+
+      - store_artifacts:
+          path: build/reports/tests
+          destination: reports
+
+      - run:
+          name: run build
+          command: ./gradlew build
+
+      - store_artifacts:
+          path: build/libs
+          destination: artifacts
+          when: always
+
+      - store_test_results:
+          path: build/test-results
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build
