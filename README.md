@@ -49,7 +49,7 @@ Use with Maven:
 </dependency>
 ```
 
-For more info see the [JitPack](https://jitpack.io/#petarov/java-app-icons) or [JCenter](https://bintray.com/petarov/java-libs/java-app-icons) (deprecated) setup pages.
+For more info see the [JitPack](https://jitpack.io/#petarov/java-app-icons).
 
 # Usage
 
