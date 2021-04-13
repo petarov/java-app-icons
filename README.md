@@ -25,11 +25,10 @@ Use with Gradle:
 
 ```gradle
 repositories {
-    jcenter()
+    maven { url 'https://jitpack.io' }
 }
-
 dependencies {
-    implementation 'net.vexelon:java-app-icons:1.3'
+    implementation 'com.github.petarov:java-app-icons:1.3'
 }
 ```
 
@@ -50,7 +49,7 @@ Use with Maven:
 </dependency>
 ```
 
-For more info see the [JitPack](https://jitpack.io/#petarov/java-app-icons) or [JCenter](https://bintray.com/petarov/java-libs/java-app-icons) setup pages.
+For more info see the [JitPack](https://jitpack.io/#petarov/java-app-icons) or [JCenter](https://bintray.com/petarov/java-libs/java-app-icons) (deprecated) setup pages.
 
 # Usage
 
